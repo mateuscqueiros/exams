@@ -1,6 +1,6 @@
 "use client";
 
-import { useExamSessionStore, useExamStatusStore } from "@/stores/exam";
+import { useExamSessionStore } from "@/stores/exam";
 import {
   Burger,
   Group,
@@ -9,11 +9,13 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconQuestionMark } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import classes from "./AppShell.module.css";
 
 export function AppShell({ children }: React.PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
   const examSession = useExamSessionStore();
+  const router = useRouter();
 
   return (
     <MantineAppShell
@@ -32,7 +34,12 @@ export function AppShell({ children }: React.PropsWithChildren) {
             <IconQuestionMark />
             <Group ml="xl" gap={0} visibleFrom="sm">
               <UnstyledButton className={classes.control}>Home</UnstyledButton>
-              <UnstyledButton className={classes.control}>Blog</UnstyledButton>
+              <UnstyledButton
+                className={classes.control}
+                onClick={() => router.push(`/exams/react-1`)}
+              >
+                Blog
+              </UnstyledButton>
               <UnstyledButton className={classes.control}>
                 Contacts
               </UnstyledButton>

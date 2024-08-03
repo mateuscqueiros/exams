@@ -1,9 +1,8 @@
-// Import styles of packages that you've installed.
-// All packages except `@mantine/hooks` require styles imports
 import "@mantine/core/styles.css";
 
 import { AppShell } from "@/components/layout";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "My Mantine app",
@@ -33,6 +32,7 @@ export default function RootLayout({
         <MantineProvider theme={theme}>
           <AppShell>{children}</AppShell>
         </MantineProvider>
+        <Toaster richColors />
       </body>
     </html>
   );

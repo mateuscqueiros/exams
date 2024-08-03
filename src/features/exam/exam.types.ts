@@ -17,6 +17,7 @@ export type ExamType = {
 export type ExamSessionType = {
   preForm: PreExamFormType,
   questions: QuestionType[]
+  active: boolean
 };
 
 export type QuestionType = {

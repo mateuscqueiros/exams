@@ -7,6 +7,7 @@ import { Button, Container, Flex, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function PreExamPage() {
   const currentExamSession = useExamSessionStore();
@@ -23,6 +24,12 @@ export default function PreExamPage() {
   });
 
   const handleSubmit = (values: PreExamFormType) => {
+    if (currentExamSession.session?.active) {
+      toast.error(
+        "Não é possível iniciar uma nova sessão enquanto houver uma sessão ativa",
+      );
+      return;
+    }
     currentExamSession.startSession(examToDo);
     currentExamSession.updatePreForm(values);
 
