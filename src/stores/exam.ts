@@ -7,7 +7,7 @@ export type ExamStatusStoreType = {
   removeQuestion: (questionId: QuestionType['id']) => void;
   updateQuestion: (questionData: QuestionType) => void
   startExam: (examId: number) => void;
-  exam: ExamStatusType | undefined;
+  data: ExamStatusType | undefined;
 };
 
 export const examStatusStoreDefaultData: ExamStatusType = {
@@ -22,7 +22,7 @@ export const examStatusStoreDefaultData: ExamStatusType = {
 }
 
 export const useExamStatusStore = create<ExamStatusStoreType>((set) => ({
-  exam: {
+  data: {
     ...examData,
     preForm: {
       name: 'Mateus',
@@ -45,16 +45,16 @@ export const useExamStatusStore = create<ExamStatusStoreType>((set) => ({
     ...state,
     preForm: data
   })),
-  removeQuestion: (questionId: QuestionType['id']) => set(state => (state.exam ? {
+  removeQuestion: (questionId: QuestionType['id']) => set(state => (state.data ? {
     ...state,
-    questions: state.exam.questions.filter(q => q.id === questionId)
+    questions: state.data.questions.filter(q => q.id === questionId)
   } : state)),
   updateQuestion: (questionData: QuestionType) => set((state) => {
-    if (!state.exam) return state
-    const questionExists = state.exam.questions.some(q => q.id === questionData.id)
+    if (!state.data) return state
+    const questionExists = state.data.questions.some(q => q.id === questionData.id)
 
     if (questionExists) {
-      const otherQuestions = state.exam.questions.filter(q => q.id === questionData.id);
+      const otherQuestions = state.data.questions.filter(q => q.id === questionData.id);
 
       return {
         ...state,
@@ -64,7 +64,7 @@ export const useExamStatusStore = create<ExamStatusStoreType>((set) => ({
 
     return {
       ...state,
-      questions: [...state.exam.questions, questionData]
+      questions: [...state.data.questions, questionData]
     }
   })
 }))

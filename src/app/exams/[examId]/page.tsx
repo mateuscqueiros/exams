@@ -1,4 +1,5 @@
 "use client";
+
 import { PreExamFormType, preExamSchema } from "@/features/exam";
 import { useExamStatusStore } from "@/stores/exam";
 import { examData } from "@/values";
@@ -8,9 +9,10 @@ import { zodResolver } from "mantine-form-zod-resolver";
 import { useRouter } from "next/navigation";
 
 export default function PreExamPage() {
-  const currentExam = useExamStatusStore();
+  const currentExamSession = useExamStatusStore();
   const examToDo = examData;
 
+  const router = useRouter();
   const form = useForm<PreExamFormType>({
     initialValues: {
       name: "",
@@ -18,11 +20,10 @@ export default function PreExamPage() {
     },
     validate: zodResolver(preExamSchema),
   });
-  console.log(currentExam);
-  const router = useRouter;
 
   const handleSubmit = (values: PreExamFormType) => {
-    currentExam.updatePreForm(values);
+    currentExamSession.startExam(0);
+    currentExamSession.updatePreForm(values);
     router.push(
       `/exams/${examToDo.slug}/questions/${examToDo.questions.find((q) => q.number === 1)}`,
     );
@@ -30,7 +31,7 @@ export default function PreExamPage() {
 
   return (
     <Container maw={500}>
-      <h1>{currentExam.title}</h1>
+      <h1>{examToDo.title}</h1>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Flex direction="column" gap={20}>
           <TextInput label="Nome" required {...form.getInputProps("name")} />
