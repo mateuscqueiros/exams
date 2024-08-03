@@ -1,7 +1,7 @@
 "use client";
 
 import { PreExamFormType, preExamSchema } from "@/features/exam";
-import { useExamStatusStore } from "@/stores/exam";
+import { useExamSessionStore } from "@/stores/exam";
 import { examData } from "@/values";
 import { Button, Container, Flex, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -9,10 +9,11 @@ import { zodResolver } from "mantine-form-zod-resolver";
 import { useRouter } from "next/navigation";
 
 export default function PreExamPage() {
-  const currentExamSession = useExamStatusStore();
+  const currentExamSession = useExamSessionStore();
   const examToDo = examData;
 
   const router = useRouter();
+
   const form = useForm<PreExamFormType>({
     initialValues: {
       name: "",
@@ -22,11 +23,12 @@ export default function PreExamPage() {
   });
 
   const handleSubmit = (values: PreExamFormType) => {
-    currentExamSession.startExam(0);
+    currentExamSession.startSession(examToDo);
     currentExamSession.updatePreForm(values);
-    router.push(
-      `/exams/${examToDo.slug}/questions/${examToDo.questions.find((q) => q.number === 1)}`,
-    );
+
+    const firstQuestion = examToDo.questions.find((q) => q.number === 1);
+
+    router.push(`/exams/${examToDo.slug}/questions/${firstQuestion?.number}`);
   };
 
   return (

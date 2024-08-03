@@ -1,19 +1,19 @@
-import { create } from "zustand";
-import { ExamStatusType, ExamType, PreExamFormType, QuestionType } from '../features/exam'
-import { allExams, examData } from "@/values";
+'use client'
 
-export type ExamStatusStoreType = {
-  updatePreForm: (data: PreExamFormType) => void,
+import { create } from "zustand";
+import { ExamSessionType, ExamType, PreExamFormType, QuestionType } from '../features/exam'
+
+export type ExamSessionStoreType = {
+  updatePreForm: (values: PreExamFormType) => void,
   removeQuestion: (questionId: QuestionType['id']) => void;
   updateQuestion: (questionData: QuestionType) => void
-  startExam: (examId: number) => void;
-  data: ExamStatusType | undefined;
+  startSession: (examData: ExamType) => void;
+  endSession: () => void;
+  exam: ExamType | undefined;
+  session: ExamSessionType | undefined;
 };
 
-export const examStatusStoreDefaultData: ExamStatusType = {
-  id: undefined,
-  title: '',
-  slug: '',
+export const examSessionStoreDefaultData: ExamSessionType = {
   questions: [],
   preForm: {
     name: '',
@@ -21,50 +21,80 @@ export const examStatusStoreDefaultData: ExamStatusType = {
   }
 }
 
-export const useExamStatusStore = create<ExamStatusStoreType>((set) => ({
-  data: {
-    ...examData,
-    preForm: {
-      name: 'Mateus',
-      information: 'asdfgadf'
-    },
-  },
-  startExam: (examId: number) => set(state => {
-    const newExam = allExams.find((exam) => exam.id === examId)
-    if (newExam) return {
-      ...state,
-      exam: {
-        ...newExam,
-        id: examId,
-        preForm: examStatusStoreDefaultData.preForm
-      }
-    }
-    return state
-  }),
-  updatePreForm: (data: PreExamFormType) => set(state => ({
-    ...state,
-    preForm: data
-  })),
-  removeQuestion: (questionId: QuestionType['id']) => set(state => (state.data ? {
-    ...state,
-    questions: state.data.questions.filter(q => q.id === questionId)
-  } : state)),
-  updateQuestion: (questionData: QuestionType) => set((state) => {
-    if (!state.data) return state
-    const questionExists = state.data.questions.some(q => q.id === questionData.id)
+export const useExamSessionStore = create<ExamSessionStoreType>((set) => ({
+  session: examSessionStoreDefaultData,
+  exam: undefined,
+  startSession: (examData: ExamType) => set((state) => startSession(state, examData)),
+  endSession: () => set(endSession),
+  updatePreForm: (preFormData: PreExamFormType) => set((state) => updatePreForm(state, preFormData)),
+  removeQuestion: (questionId: QuestionType['id']) => set(state => removeQuestion(state, questionId)),
+  updateQuestion: (questionData: QuestionType) => set(state => updateQuestion(state, questionData))
+}))
 
-    if (questionExists) {
-      const otherQuestions = state.data.questions.filter(q => q.id === questionData.id);
+function updateQuestion(state: ExamSessionStoreType, questionData: QuestionType): ExamSessionStoreType {
+  console.log('update question')
+  if (!state.session) return state
+  const questionExists = state.session.questions.some(q => q.id === questionData.id)
 
-      return {
-        ...state,
-        questions: [...otherQuestions, questionData]
-      }
-    }
+  if (questionExists) {
+    const otherQuestions = state.session.questions.filter(q => q.id === questionData.id);
 
     return {
       ...state,
-      questions: [...state.data.questions, questionData]
+      session: {
+        ...state.session,
+        questions: [...otherQuestions, questionData]
+      }
     }
-  })
-}))
+  }
+
+  return {
+    ...state,
+    session: {
+      ...state.session,
+      questions: [...state.session.questions, questionData]
+    }
+  }
+}
+
+function removeQuestion(state: ExamSessionStoreType, questionId: QuestionType['id']): ExamSessionStoreType {
+  console.log('remove', state)
+  return state.session !== undefined ? {
+    ...state,
+    session: {
+      ...state.session,
+      questions: state.session.questions.filter(q => q.id !== questionId)
+    }
+  } : state
+}
+
+function updatePreForm(state: ExamSessionStoreType, preFormData: PreExamFormType): ExamSessionStoreType {
+  return state.session !== undefined ? {
+    ...state,
+    session: {
+      ...state.session,
+      preForm: preFormData
+    }
+  } : state
+
+}
+
+function startSession(state: ExamSessionStoreType, examData: ExamType): ExamSessionStoreType {
+  console.log('start')
+  return {
+    ...state,
+    exam: examData,
+    session: {
+      questions: [],
+      preForm: examSessionStoreDefaultData.preForm
+    }
+  }
+}
+
+function endSession(state: ExamSessionStoreType): ExamSessionStoreType {
+  return {
+    ...state,
+    exam: undefined,
+    session: examSessionStoreDefaultData
+  }
+}

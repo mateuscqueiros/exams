@@ -1,5 +1,6 @@
 "use client";
 
+import { useExamSessionStore, useExamStatusStore } from "@/stores/exam";
 import {
   Burger,
   Group,
@@ -12,6 +13,7 @@ import classes from "./AppShell.module.css";
 
 export function AppShell({ children }: React.PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
+  const examSession = useExamSessionStore();
 
   return (
     <MantineAppShell
@@ -36,6 +38,12 @@ export function AppShell({ children }: React.PropsWithChildren) {
               </UnstyledButton>
               <UnstyledButton className={classes.control}>
                 Support
+              </UnstyledButton>
+              <UnstyledButton
+                className={classes.control}
+                onClick={() => examSession.endSession()}
+              >
+                End Session
               </UnstyledButton>
             </Group>
           </Group>

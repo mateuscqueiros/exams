@@ -14,9 +14,10 @@ export type ExamType = {
   slug: string
 }
 
-export type ExamStatusType = {
+export type ExamSessionType = {
   preForm: PreExamFormType,
-} & ExamType;
+  questions: QuestionType[]
+};
 
 export type QuestionType = {
   id: number

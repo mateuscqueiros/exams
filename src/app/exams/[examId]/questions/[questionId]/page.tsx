@@ -1,6 +1,6 @@
 "use client";
 import { Alternative, QuestionsMenu } from "@/features/exam";
-import { useExamStatusStore } from "@/stores/exam";
+import { useExamSessionStore } from "@/stores/exam";
 import {
   ActionIcon,
   Affix,
@@ -23,12 +23,13 @@ export default function QuestionPage({
 }: {
   params: { questionId: string };
 }) {
-  const currenExamSession = useExamStatusStore();
+  const currentExamSession = useExamSessionStore();
 
-  console.log(currenExamSession.data);
+  console.log(currentExamSession);
 
   const [selected, setSelected] = useState(0);
-  const [opened, { open, close, toggle }] = useDisclosure(false);
+  const [opened, { close, toggle }] = useDisclosure(false);
+
   return (
     <Box style={{ position: "relative" }}>
       <Container w="100%" miw={{ md: 800 }}>
