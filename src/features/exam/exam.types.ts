@@ -1,3 +1,4 @@
+import { Session } from "inspector";
 import { z } from "zod";
 
 export const preExamSchema = z.object({
@@ -16,7 +17,7 @@ export type ExamType = {
 
 export type ExamSessionType = {
   preForm: PreExamFormType,
-  questions: QuestionType[]
+  questions: SessionQuestionType[]
   active: boolean
 };
 
@@ -26,7 +27,12 @@ export type QuestionType = {
   title: string
   description: string
   alternatives: AlternativeType[]
-  selected: AlternativeType['id'] | undefined
+}
+
+export type SessionQuestionType = {
+  questionId: number;
+  number: number
+  selected: number;
 }
 
 export type AlternativeType = {

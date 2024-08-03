@@ -1,14 +1,13 @@
 'use client'
 
 import { create } from "zustand";
-import { ExamSessionType, ExamType, PreExamFormType, QuestionType } from '../features/exam'
+import { ExamSessionType, ExamType, PreExamFormType, QuestionType, SessionQuestionType } from '../features/exam'
 import { toast } from "sonner";
-import { createJSONStorage, persist } from "zustand/middleware";
 
 export type ExamSessionStoreType = {
   updatePreForm: (values: PreExamFormType) => void,
   removeQuestion: (questionId: QuestionType['id']) => void;
-  updateQuestion: (questionData: QuestionType) => void
+  updateQuestion: (questionData: SessionQuestionType) => void
   startSession: (examData: ExamType) => void;
   endSession: () => void;
   exam: ExamType | undefined;
@@ -24,25 +23,37 @@ export const examSessionStoreDefaultData: ExamSessionType = {
   }
 }
 
-export const useExamSessionStore = create(persist<ExamSessionStoreType>((set) => ({
+export const useExamSessionStore = create<ExamSessionStoreType>((set) => ({
   session: examSessionStoreDefaultData,
   exam: undefined,
   startSession: (examData: ExamType) => set((state) => startSession(state, examData)),
   endSession: () => set((state) => endSession(state)),
   updatePreForm: (preFormData: PreExamFormType) => set((state) => updatePreForm(state, preFormData)),
   removeQuestion: (questionId: QuestionType['id']) => set(state => removeQuestion(state, questionId)),
-  updateQuestion: (questionData: QuestionType) => set(state => updateQuestion(state, questionData))
-}), {
-  name: 'exam-session-storage',
+  updateQuestion: (questionData: SessionQuestionType) => set(state => updateQuestion(state, questionData))
 }))
 
-function updateQuestion(state: ExamSessionStoreType, questionData: QuestionType): ExamSessionStoreType {
-  console.log('update question')
+// export const useExamSessionStore = create(persist<ExamSessionStoreType>((set) => ({
+//   session: examSessionStoreDefaultData,
+//   exam: undefined,
+//   startSession: (examData: ExamType) => set((state) => startSession(state, examData)),
+//   endSession: () => set((state) => endSession(state)),
+//   updatePreForm: (preFormData: PreExamFormType) => set((state) => updatePreForm(state, preFormData)),
+//   removeQuestion: (questionId: QuestionType['id']) => set(state => removeQuestion(state, questionId)),
+//   updateQuestion: (questionData: QuestionType) => set(state => updateQuestion(state, questionData))
+// }), {
+//   // name: 'exam-session-storage',
+//   name: 'exam-session-storage',
+// }))
+
+function updateQuestion(state: ExamSessionStoreType, questionData: SessionQuestionType): ExamSessionStoreType {
   if (!state.session) return state
-  const questionExists = state.session.questions.some(q => q.id === questionData.id)
+
+  const questionExists = state.session.questions.some(q => q.questionId === questionData.questionId)
+  toast.success('Resposta salva')
 
   if (questionExists) {
-    const otherQuestions = state.session.questions.filter(q => q.id === questionData.id);
+    const otherQuestions = state.session.questions.filter(q => q.questionId !== questionData.questionId);
 
     return {
       ...state,
@@ -90,7 +101,7 @@ function startSession(state: ExamSessionStoreType, examData: ExamType): ExamSess
     return state
   }
 
-  toast.success(`Sessão para ${examData.title} iniciada.`)
+  toast.info(`Sessão para ${examData.title} iniciada`)
   return {
     ...state,
     exam: examData,

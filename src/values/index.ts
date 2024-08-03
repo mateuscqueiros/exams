@@ -30,7 +30,7 @@ export const examData: ExamType = {
           label: 'Opção 3'
         },
         {
-          id: 0,
+          id: 4,
           label: 'Opção 4'
         },
       ]

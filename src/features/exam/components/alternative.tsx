@@ -8,7 +8,7 @@ import {
   IconLetterE,
 } from "@tabler/icons-react";
 
-export type AlternativeType = {
+export type AlternativeComponentType = {
   label: string;
   name: string;
   value: number;
@@ -22,8 +22,9 @@ export function Alternative({
   value,
   checked,
   onSelect,
-}: AlternativeType) {
+}: AlternativeComponentType) {
   const theme = useMantineTheme();
+
   const icons = [
     IconLetterA,
     IconLetterB,
@@ -35,6 +36,7 @@ export function Alternative({
   return (
     <UnstyledButton onClick={() => onSelect(value)}>
       <Card
+        p="sm"
         style={{
           borderColor: checked ? theme.colors.lime[4] : undefined,
           borderWidth: 1,
