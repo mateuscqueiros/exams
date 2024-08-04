@@ -16,7 +16,6 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function QuestionPage({
@@ -26,7 +25,6 @@ export default function QuestionPage({
 }) {
   const [selected, setSelected] = useState<null | number>(null);
   const examSession = useExamSessionStore();
-  const params = useParams<{ examId: string }>();
 
   if (!examSession.session?.active) {
     examSession.startSession(examData);
@@ -79,7 +77,6 @@ export default function QuestionPage({
             </Box>
           </Flex>
         </Center>
-        <QuestionsFooter currentQuestion={question} />
       </Container>
     </Box>
   );

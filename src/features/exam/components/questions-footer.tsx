@@ -63,20 +63,6 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
       bg="white"
     >
       <Flex align="center" direction="column" justify="center" h="100%">
-        <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
-          <Button
-            disabled={!hasPreviousQuestion}
-            onClick={() => router.push(previousQuestionURL)}
-          >
-            Anterior
-          </Button>
-          <Button
-            disabled={!hasNextQuestion}
-            onClick={() => router.push(nextQuestionURL)}
-          >
-            Próxima
-          </Button>
-        </Flex>
         <Flex w="100%" justify="space-between" align="center">
           <Button
             disabled={!hasPreviousQuestion}
@@ -87,7 +73,7 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
           </Button>
           <Flex
             gap={10}
-            mt={isMobile ? 20 : undefined}
+            mb={isMobile ? 20 : undefined}
             align="center"
             justify="center"
             w={isMobile ? "100%" : undefined}
@@ -106,6 +92,20 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
             onClick={() => router.push(nextQuestionURL)}
             disabled={!hasNextQuestion}
             visibleFrom={mobileBreakpoint}
+          >
+            Próxima
+          </Button>
+        </Flex>
+        <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
+          <Button
+            disabled={!hasPreviousQuestion}
+            onClick={() => router.push(previousQuestionURL)}
+          >
+            Anterior
+          </Button>
+          <Button
+            disabled={!hasNextQuestion}
+            onClick={() => router.push(nextQuestionURL)}
           >
             Próxima
           </Button>

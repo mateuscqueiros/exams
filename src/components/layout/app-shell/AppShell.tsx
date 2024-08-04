@@ -1,5 +1,6 @@
 "use client";
 
+import { QuestionsFooter } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
 import {
   Burger,
@@ -9,13 +10,21 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconQuestionMark } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import classes from "./AppShell.module.css";
 
 export function AppShell({ children }: React.PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
   const examSession = useExamSessionStore();
   const router = useRouter();
+  const params = useParams<{ questionNumber: string }>();
+
+  const currentQuestion =
+    examSession.session?.active && params.questionNumber
+      ? examSession.exam?.questions.find(
+          (q) => q.number === Number(params.questionNumber),
+        )
+      : undefined;
 
   return (
     <MantineAppShell
@@ -65,6 +74,9 @@ export function AppShell({ children }: React.PropsWithChildren) {
       </MantineAppShell.Navbar>
 
       <MantineAppShell.Main>{children}</MantineAppShell.Main>
+      {examSession.session?.active && currentQuestion && (
+        <QuestionsFooter currentQuestion={currentQuestion} />
+      )}
     </MantineAppShell>
   );
 }

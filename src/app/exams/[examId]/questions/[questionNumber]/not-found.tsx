@@ -1,3 +1,5 @@
+import { Container } from "@mantine/core";
+
 export default function NotFoundQuestion() {
-  return <>Não existe uma sessão ativa para este teste.</>;
+  return <Container>Não existe uma sessão ativa para este teste.</Container>;
 }

@@ -32,7 +32,7 @@ export default function RootLayout({
         <MantineProvider theme={theme}>
           <AppShell>{children}</AppShell>
         </MantineProvider>
-        <Toaster richColors />
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );

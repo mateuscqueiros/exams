@@ -74,7 +74,6 @@ function updateQuestion(state: ExamSessionStoreType, questionData: SessionQuesti
 }
 
 function removeQuestion(state: ExamSessionStoreType, questionNumber: QuestionType['number']): ExamSessionStoreType {
-  console.log('remove', state)
   return state.session !== undefined ? {
     ...state,
     session: {
