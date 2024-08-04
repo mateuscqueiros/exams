@@ -3,21 +3,55 @@
 import { useExamSessionStore } from "@/stores/exam";
 import { Affix, Button, Flex, Progress, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { QuestionType } from "../exam.types";
 
-export function QuestionsFooter() {
+export type QuestionFooterType = {
+  currentQuestion: QuestionType;
+};
+
+export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
   const examSession = useExamSessionStore();
+  const params = useParams();
+  const router = useRouter();
+
   if (!examSession.session?.active) return <></>;
 
   if (!examSession.session || !examSession.exam) return;
 
   const selectedQuestions = examSession.session.questions.length;
   const totalQuestions = examSession.exam.questions.length;
-  console.log(selectedQuestions, totalQuestions);
 
   const percentage = (selectedQuestions / totalQuestions) * 100;
-  const mobileBreakpoint = "sm";
 
+  const mobileBreakpoint = "sm";
   const isMobile = useMediaQuery(`(max-width: 48em)`);
+
+  const hasPreviousQuestion =
+    Math.min(...examSession.exam.questions.map((q) => q.number)) <
+    currentQuestion.number;
+
+  const hasNextQuestion =
+    Math.max(...examSession.exam.questions.map((q) => q.number)) >
+    currentQuestion.number;
+
+  let nextQuestionURL = "";
+  let previousQuestionURL = "";
+  const questionsNumbers = examSession.exam.questions.map((q) => q.number);
+
+  if (hasNextQuestion) {
+    const nextQuestionNumber =
+      questionsNumbers[questionsNumbers.indexOf(currentQuestion.number) + 1];
+
+    nextQuestionURL = `/exams/${params.examId}/questions/${nextQuestionNumber}`;
+  }
+
+  if (hasPreviousQuestion) {
+    const previousQuestionNumber =
+      questionsNumbers[questionsNumbers.indexOf(currentQuestion.number) - 1];
+
+    previousQuestionURL = `/exams/${params.examId}/questions/${previousQuestionNumber}`;
+  }
 
   return (
     <Affix
@@ -30,11 +64,27 @@ export function QuestionsFooter() {
     >
       <Flex align="center" direction="column" justify="center" h="100%">
         <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
-          <Button>Anterior</Button>
-          <Button>Próxima</Button>
+          <Button
+            disabled={!hasPreviousQuestion}
+            onClick={() => router.push(previousQuestionURL)}
+          >
+            Anterior
+          </Button>
+          <Button
+            disabled={!hasNextQuestion}
+            onClick={() => router.push(nextQuestionURL)}
+          >
+            Próxima
+          </Button>
         </Flex>
         <Flex w="100%" justify="space-between" align="center">
-          <Button visibleFrom={mobileBreakpoint}>Anterior</Button>
+          <Button
+            disabled={!hasPreviousQuestion}
+            visibleFrom={mobileBreakpoint}
+            onClick={() => router.push(previousQuestionURL)}
+          >
+            Anterior
+          </Button>
           <Flex
             gap={10}
             mt={isMobile ? 20 : undefined}
@@ -43,12 +93,22 @@ export function QuestionsFooter() {
             w={isMobile ? "100%" : undefined}
           >
             <Text>{percentage}%</Text>
-            <Progress value={percentage} w={isMobile ? "100%" : 300} />
+            <Progress
+              transitionDuration={500}
+              value={percentage}
+              w={isMobile ? "100%" : 300}
+            />
             <Text>
               {selectedQuestions}/{totalQuestions}
             </Text>
           </Flex>
-          <Button visibleFrom={mobileBreakpoint}>Próxima</Button>
+          <Button
+            onClick={() => router.push(nextQuestionURL)}
+            disabled={!hasNextQuestion}
+            visibleFrom={mobileBreakpoint}
+          >
+            Próxima
+          </Button>
         </Flex>
       </Flex>
     </Affix>

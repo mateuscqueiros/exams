@@ -10,7 +10,35 @@ export const examData: ExamType = {
       id: 0,
       title: 'O que é HTML?',
       number: 1,
-      selected: undefined,
+      description: 'Lorem ipsum',
+      alternatives: [
+        {
+          id: 0,
+          label: 'Opção 0'
+        },
+        {
+          id: 1,
+          label: 'Opção 1'
+        },
+        {
+          id: 2,
+          label: 'Opção 2'
+        },
+        {
+          id: 3,
+          label: 'Opção 3'
+        },
+        {
+          id: 4,
+          label: 'Opção 4'
+        },
+      ]
+    },
+
+    {
+      id: 1,
+      title: 'O que é HTML?',
+      number: 2,
       description: 'Lorem ipsum',
       alternatives: [
         {

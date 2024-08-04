@@ -6,6 +6,7 @@ import {
   QuestionsMenu,
 } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
+import { examData } from "@/values";
 import {
   Box,
   Center,
@@ -15,7 +16,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function QuestionPage({
@@ -25,10 +26,12 @@ export default function QuestionPage({
 }) {
   const [selected, setSelected] = useState<null | number>(null);
   const examSession = useExamSessionStore();
+  const params = useParams<{ examId: string }>();
 
   if (!examSession.session?.active) {
-    // examSession.startSession(examData);
-    return notFound();
+    examSession.startSession(examData);
+    return;
+    // return <>Não existe uma sessão ativa para este teste</>;
   }
 
   const question = examSession.exam?.questions.find(
@@ -51,11 +54,11 @@ export default function QuestionPage({
   return (
     <Box style={{ position: "relative" }}>
       <Container w="100%" miw={{ md: 800 }}>
-        <QuestionsMenu />
+        <QuestionsMenu currentQuestion={question} />
         <Center mb={100}>
           <Flex direction="column" w="100%">
-            <Title order={4}>Questão 1</Title>
-            <Text>{question.description}</Text>
+            <Title order={4}>Questão {questionNumber}</Title>
+            <Text>{question.title}</Text>
             <Divider my={20} />
             <Box>
               <Flex direction="column" gap={20}>
@@ -76,7 +79,7 @@ export default function QuestionPage({
             </Box>
           </Flex>
         </Center>
-        <QuestionsFooter />
+        <QuestionsFooter currentQuestion={question} />
       </Container>
     </Box>
   );

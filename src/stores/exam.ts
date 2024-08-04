@@ -73,13 +73,13 @@ function updateQuestion(state: ExamSessionStoreType, questionData: SessionQuesti
   }
 }
 
-function removeQuestion(state: ExamSessionStoreType, questionId: QuestionType['id']): ExamSessionStoreType {
+function removeQuestion(state: ExamSessionStoreType, questionNumber: QuestionType['number']): ExamSessionStoreType {
   console.log('remove', state)
   return state.session !== undefined ? {
     ...state,
     session: {
       ...state.session,
-      questions: state.session.questions.filter(q => q.id !== questionId)
+      questions: state.session.questions.filter(q => q.number !== questionNumber)
     }
   } : state
 }
