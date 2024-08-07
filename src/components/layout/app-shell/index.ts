@@ -1,2 +1,2 @@
-export * from './AppShell'
-export * from './AppShell.module.css'
+export * from './app-shell'
+export * from './app-shell.module.css'

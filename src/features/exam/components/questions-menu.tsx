@@ -9,10 +9,10 @@ import { useParams } from "next/navigation";
 import { QuestionType } from "../exam.types";
 
 export type QuestionsMenuType = {
-  currentQuestion: QuestionType;
+  question: QuestionType;
 };
 
-export function QuestionsMenu({ currentQuestion }: QuestionsMenuType) {
+export function QuestionsMenu({ question }: QuestionsMenuType) {
   const params = useParams<{ examId: string; questionId: string }>();
   const [opened, { close, toggle }] = useDisclosure(false);
   const examSession = useExamSessionStore();
@@ -20,7 +20,7 @@ export function QuestionsMenu({ currentQuestion }: QuestionsMenuType) {
   if (!examSession.session) return <>Nenhuma sessão ativa</>;
   if (!examSession.exam?.questions) return <>Sem questões</>;
 
-  const selectedQuestionsNumbers = examSession.session.questions.map(
+  const selectedQuestionsNumbers = examSession.session.answers.map(
     (q) => q.number,
   );
 
@@ -44,7 +44,7 @@ export function QuestionsMenu({ currentQuestion }: QuestionsMenuType) {
         <Text size="sm">30 questões pendentes</Text>
         <Grid mt={20} gutter={10}>
           {examSession.exam?.questions.map((question, i) => {
-            const isSelected = currentQuestion.number === question.number;
+            const isSelected = question.number === question.number;
             const isAnswered = selectedQuestionsNumbers.includes(
               question.number,
             );

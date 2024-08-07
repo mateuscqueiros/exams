@@ -14,23 +14,30 @@ export const examData: ExamType = {
       alternatives: [
         {
           id: 0,
-          label: 'Opção 0'
+          label: 'Opção 0',
+          sequence: 0
         },
         {
           id: 1,
-          label: 'Opção 1'
+          label: 'Opção 1',
+          sequence: 1
         },
         {
           id: 2,
-          label: 'Opção 2'
+          label: 'Opção 2',
+          sequence: 2
         },
         {
           id: 3,
-          label: 'Opção 3'
+          label: 'Opção 3',
+          sequence: 3
+
         },
         {
           id: 4,
-          label: 'Opção 4'
+          label: 'Opção 4',
+          sequence: 4
+
         },
       ]
     },
@@ -43,23 +50,30 @@ export const examData: ExamType = {
       alternatives: [
         {
           id: 0,
-          label: 'Opção 0'
+          label: 'Opção 0',
+          sequence: 0
         },
         {
           id: 1,
-          label: 'Opção 1'
+          label: 'Opção 1',
+          sequence: 1
         },
         {
           id: 2,
-          label: 'Opção 2'
+          label: 'Opção 2',
+          sequence: 2
         },
         {
           id: 3,
-          label: 'Opção 3'
+          label: 'Opção 3',
+          sequence: 3
+
         },
         {
           id: 4,
-          label: 'Opção 4'
+          label: 'Opção 4',
+          sequence: 4
+
         },
       ]
     }

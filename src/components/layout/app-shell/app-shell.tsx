@@ -11,7 +11,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { useParams, useRouter } from "next/navigation";
-import classes from "./AppShell.module.css";
+import classes from "./app-shell.module.css";
 
 export function AppShell({ children }: React.PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
@@ -75,7 +75,7 @@ export function AppShell({ children }: React.PropsWithChildren) {
 
       <MantineAppShell.Main>{children}</MantineAppShell.Main>
       {examSession.session?.active && currentQuestion && (
-        <QuestionsFooter currentQuestion={currentQuestion} />
+        <QuestionsFooter question={currentQuestion} />
       )}
     </MantineAppShell>
   );

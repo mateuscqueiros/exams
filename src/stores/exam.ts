@@ -1,13 +1,13 @@
 'use client'
 
 import { create } from "zustand";
-import { ExamSessionType, ExamType, PreExamFormType, QuestionType, SessionQuestionType } from '../features/exam'
+import { ExamSessionType, ExamType, PreExamFormType, QuestionType, AnswerType } from '../features/exam'
 import { toast } from "sonner";
 
 export type ExamSessionStoreType = {
   updatePreForm: (values: PreExamFormType) => void,
   removeQuestion: (questionId: QuestionType['id']) => void;
-  updateQuestion: (questionData: SessionQuestionType) => void
+  updateQuestion: (questionData: AnswerType) => void
   startSession: (examData: ExamType) => void;
   endSession: () => void;
   exam: ExamType | undefined;
@@ -30,7 +30,7 @@ export const useExamSessionStore = create<ExamSessionStoreType>((set) => ({
   endSession: () => set((state) => endSession(state)),
   updatePreForm: (preFormData: PreExamFormType) => set((state) => updatePreForm(state, preFormData)),
   removeQuestion: (questionId: QuestionType['id']) => set(state => removeQuestion(state, questionId)),
-  updateQuestion: (questionData: SessionQuestionType) => set(state => updateQuestion(state, questionData))
+  updateQuestion: (questionData: AnswerType) => set(state => updateQuestion(state, questionData))
 }))
 
 // export const useExamSessionStore = create(persist<ExamSessionStoreType>((set) => ({
@@ -46,20 +46,20 @@ export const useExamSessionStore = create<ExamSessionStoreType>((set) => ({
 //   name: 'exam-session-storage',
 // }))
 
-function updateQuestion(state: ExamSessionStoreType, questionData: SessionQuestionType): ExamSessionStoreType {
+function updateQuestion(state: ExamSessionStoreType, questionData: AnswerType): ExamSessionStoreType {
   if (!state.session) return state
 
-  const questionExists = state.session.questions.some(q => q.questionId === questionData.questionId)
+  const questionExists = state.session.answers.some(q => q.questionId === questionData.questionId)
   toast.success('Resposta salva')
 
   if (questionExists) {
-    const otherQuestions = state.session.questions.filter(q => q.questionId !== questionData.questionId);
+    const otherQuestions = state.session.answers.filter(q => q.questionId !== questionData.questionId);
 
     return {
       ...state,
       session: {
         ...state.session,
-        questions: [...otherQuestions, questionData]
+        answers: [...otherQuestions, questionData]
       }
     }
   }
@@ -68,7 +68,7 @@ function updateQuestion(state: ExamSessionStoreType, questionData: SessionQuesti
     ...state,
     session: {
       ...state.session,
-      questions: [...state.session.questions, questionData]
+      answers: [...state.session.answers, questionData]
     }
   }
 }
@@ -78,7 +78,7 @@ function removeQuestion(state: ExamSessionStoreType, questionNumber: QuestionTyp
     ...state,
     session: {
       ...state.session,
-      questions: state.session.questions.filter(q => q.number !== questionNumber)
+      answers: state.session.answers.filter(q => q.number !== questionNumber)
     }
   } : state
 }
@@ -105,7 +105,7 @@ function startSession(state: ExamSessionStoreType, examData: ExamType): ExamSess
     ...state,
     exam: examData,
     session: {
-      questions: [],
+      answers: [],
       preForm: examSessionStoreDefaultData.preForm,
       active: true,
     }

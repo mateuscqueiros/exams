@@ -2,7 +2,7 @@
 import {
   Alternative,
   AlternativeType,
-  QuestionsFooter,
+  FinishButton,
   QuestionsMenu,
 } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
@@ -39,20 +39,26 @@ export default function QuestionPage({
   if (!question)
     return <>Não foi possível encontrar a questão número {questionNumber}</>;
 
-  function handleSelectQuestion(selectedAnswer: AlternativeType["id"]) {
+  const selectedAlternative = examSession.session.answers.find(
+    (q) => q.number === Number(questionNumber),
+  );
+
+  console.log(examSession.session);
+
+  function handleSelectAlternative(selectedAnswer: AlternativeType["id"]) {
     if (question === undefined) return;
 
     examSession.updateQuestion({
       number: Number(questionNumber),
       questionId: question.id,
-      selected: selectedAnswer,
+      alternativeId: selectedAnswer,
     });
   }
 
   return (
     <Box style={{ position: "relative" }}>
-      <Container w="100%" miw={{ md: 800 }}>
-        <QuestionsMenu currentQuestion={question} />
+      <Container w="99%" miw={{ md: 800 }}>
+        <QuestionsMenu question={question} />
         <Center mb={100}>
           <Flex direction="column" w="100%">
             <Title order={4}>Questão {questionNumber}</Title>
@@ -60,23 +66,32 @@ export default function QuestionPage({
             <Divider my={20} />
             <Box>
               <Flex direction="column" gap={20}>
-                {question.alternatives.map((alt) => (
-                  <Alternative
-                    name="alternative"
-                    label={alt.label}
-                    checked={selected === alt.id}
-                    key={alt.id}
-                    value={alt.id}
-                    onSelect={(v) => {
-                      handleSelectQuestion(v);
-                      setSelected(v);
-                    }}
-                  />
-                ))}
+                {question.alternatives.map((alt) => {
+                  const isSelected =
+                    selected === null
+                      ? selectedAlternative?.alternativeId === alt.id
+                      : selected === alt.id;
+
+                  return (
+                    <Alternative
+                      name="alternative"
+                      label={alt.label}
+                      checked={isSelected}
+                      key={alt.id}
+                      value={alt.id}
+                      onSelect={(v) => {
+                        handleSelectAlternative(v);
+                        setSelected(v);
+                      }}
+                    />
+                  );
+                })}
               </Flex>
             </Box>
           </Flex>
         </Center>
+        {examSession.session.answers.length ===
+          examSession.exam?.questions.length && <FinishButton />}
       </Container>
     </Box>
   );

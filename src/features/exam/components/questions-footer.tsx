@@ -7,10 +7,10 @@ import { useParams, useRouter } from "next/navigation";
 import { QuestionType } from "../exam.types";
 
 export type QuestionFooterType = {
-  currentQuestion: QuestionType;
+  question: QuestionType;
 };
 
-export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
+export function QuestionsFooter({ question }: QuestionFooterType) {
   const examSession = useExamSessionStore();
   const params = useParams();
   const router = useRouter();
@@ -19,7 +19,7 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
 
   if (!examSession.session || !examSession.exam) return;
 
-  const selectedQuestions = examSession.session.questions.length;
+  const selectedQuestions = examSession.session.answers.length;
   const totalQuestions = examSession.exam.questions.length;
 
   const percentage = (selectedQuestions / totalQuestions) * 100;
@@ -29,11 +29,11 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
 
   const hasPreviousQuestion =
     Math.min(...examSession.exam.questions.map((q) => q.number)) <
-    currentQuestion.number;
+    question.number;
 
   const hasNextQuestion =
     Math.max(...examSession.exam.questions.map((q) => q.number)) >
-    currentQuestion.number;
+    question.number;
 
   let nextQuestionURL = "";
   let previousQuestionURL = "";
@@ -41,14 +41,14 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
 
   if (hasNextQuestion) {
     const nextQuestionNumber =
-      questionsNumbers[questionsNumbers.indexOf(currentQuestion.number) + 1];
+      questionsNumbers[questionsNumbers.indexOf(question.number) + 1];
 
     nextQuestionURL = `/exams/${params.examId}/questions/${nextQuestionNumber}`;
   }
 
   if (hasPreviousQuestion) {
     const previousQuestionNumber =
-      questionsNumbers[questionsNumbers.indexOf(currentQuestion.number) - 1];
+      questionsNumbers[questionsNumbers.indexOf(question.number) - 1];
 
     previousQuestionURL = `/exams/${params.examId}/questions/${previousQuestionNumber}`;
   }
@@ -63,6 +63,20 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
       bg="white"
     >
       <Flex align="center" direction="column" justify="center" h="100%">
+        <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
+          <Button
+            disabled={!hasPreviousQuestion}
+            onClick={() => router.push(previousQuestionURL)}
+          >
+            Anterior
+          </Button>
+          <Button
+            disabled={!hasNextQuestion}
+            onClick={() => router.push(nextQuestionURL)}
+          >
+            Próxima
+          </Button>
+        </Flex>
         <Flex w="100%" justify="space-between" align="center">
           <Button
             disabled={!hasPreviousQuestion}
@@ -73,7 +87,7 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
           </Button>
           <Flex
             gap={10}
-            mb={isMobile ? 20 : undefined}
+            mt={isMobile ? 20 : undefined}
             align="center"
             justify="center"
             w={isMobile ? "100%" : undefined}
@@ -92,20 +106,6 @@ export function QuestionsFooter({ currentQuestion }: QuestionFooterType) {
             onClick={() => router.push(nextQuestionURL)}
             disabled={!hasNextQuestion}
             visibleFrom={mobileBreakpoint}
-          >
-            Próxima
-          </Button>
-        </Flex>
-        <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
-          <Button
-            disabled={!hasPreviousQuestion}
-            onClick={() => router.push(previousQuestionURL)}
-          >
-            Anterior
-          </Button>
-          <Button
-            disabled={!hasNextQuestion}
-            onClick={() => router.push(nextQuestionURL)}
           >
             Próxima
           </Button>
