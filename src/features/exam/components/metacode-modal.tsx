@@ -38,7 +38,7 @@ export function MetaCodeModal({ opened, close, code }: MetaCodeModal) {
                   <CopyButton value={code} timeout={2000}>
                     {({ copied, copy }) => (
                       <Tooltip
-                        label={copied ? "Copied" : "Copy"}
+                        label={copied ? "Copiado" : "Copiar"}
                         withArrow
                         position="right"
                       >

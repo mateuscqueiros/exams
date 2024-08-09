@@ -1,10 +1,10 @@
-import { ExamSessionStoreType } from "@/stores/exam";
+import { ExamSessionDataType, ExamSessionStoreType } from "@/stores/exam";
 import { get } from "http";
 import { AlternativeType, AnswerType } from "../exam.types";
 import { MetaProcessType, ParsedAnswerType } from "../meta-code.types";
 
-export function getMetaCode(data: ExamSessionStoreType): string | undefined {
-  if (!data.exam || !data.session) return
+export function getMetaCode(data: ExamSessionDataType): string | undefined {
+  if (!data.exam || !data.session) throw Error('Ocorreu um erro ao exportar os metadados')
   const divider = ";";
   const questionDivider = ",";
 

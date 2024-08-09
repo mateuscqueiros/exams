@@ -53,6 +53,9 @@ export function QuestionsFooter({ question }: QuestionFooterType) {
     previousQuestionURL = `/exams/${params.examId}/questions/${previousQuestionNumber}`;
   }
 
+  const examCompleted =
+    examSession.session.answers.length === examSession.exam?.questions.length;
+
   return (
     <Affix
       position={{ bottom: 0 }}
@@ -94,6 +97,7 @@ export function QuestionsFooter({ question }: QuestionFooterType) {
           >
             <Text>{percentage}%</Text>
             <Progress
+              color={examCompleted ? "lime.4" : undefined}
               transitionDuration={500}
               value={percentage}
               w={isMobile ? "100%" : 300}

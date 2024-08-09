@@ -10,9 +10,12 @@ export type ExamSessionStoreType = {
   updateQuestion: (questionData: AnswerType) => void
   startSession: (examData: ExamType) => void;
   endSession: () => void;
+} & ExamSessionDataType;
+
+export type ExamSessionDataType = {
   exam: ExamType | undefined;
   session: ExamSessionType | undefined;
-};
+}
 
 export const examSessionStoreDefaultData: ExamSessionType = {
   active: false,
