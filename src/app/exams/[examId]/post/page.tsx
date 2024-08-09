@@ -1,6 +1,13 @@
 "use client";
 
-import { AlternativeType, QuestionType } from "@/features/exam";
+import {
+  AlternativeType,
+  getMetaCode,
+  QuestionBody,
+  QuestionType,
+  readMetaCode,
+} from "@/features/exam";
+import { MetaCodeModal } from "@/features/exam/components/metacode-modal";
 import { useExamSessionStore } from "@/stores/exam";
 import { examData } from "@/values";
 import {
@@ -10,22 +17,31 @@ import {
   Card,
   Center,
   Container,
+  Divider,
   Flex,
   Grid,
+  ScrollArea,
+  Switch,
   Text,
+  Title,
   useMantineTheme,
 } from "@mantine/core";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { useState } from "react";
 
 export default function PostExam() {
   const theme = useMantineTheme();
   const examSession = useExamSessionStore();
+  const isDesktop = useMediaQuery("(min-width: 48em)");
+  const [metaCodeModalOpened, { open, close }] = useDisclosure(false);
+  const [metaCode, setMetaCode] = useState<string | null>(null);
+  const [options, setOptions] = useState({
+    showTitle: true,
+  });
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionType | null>(
     null,
   );
-
-  console.log(examSession);
 
   if (!examSession.session?.active) {
     examSession.startSession(examData);
@@ -49,8 +65,6 @@ export default function PostExam() {
   ): AlternativeType | undefined {
     if (!examSession.session) return;
 
-    console.log("questão", question);
-
     const answerInSession = examSession.session.answers.find(
       (q) => q.questionId === question.id,
     );
@@ -60,8 +74,6 @@ export default function PostExam() {
     const selectedAlternative = question.alternatives.find(
       (alt) => alt.id === answerInSession.alternativeId,
     );
-
-    console.log("na seção", answerInSession);
 
     return selectedAlternative;
   }
@@ -73,22 +85,73 @@ export default function PostExam() {
   const alternativeIdentifiers = ["A", "B", "C", "D", "E"];
 
   return (
-    <Container>
-      <Flex direction="column" justify="space-between">
-        <Box>
-          <Flex justify="center" align="center" gap={8}>
-            <IconCircleCheck color={theme.colors.lime[6]} /> Seu exame está
-            salvo localmente.
+    <Container maw={1200}>
+      <MetaCodeModal
+        opened={metaCodeModalOpened}
+        close={close}
+        code={metaCode}
+      />
+      <Center mb="xl" w="100%">
+        <IconCircleCheck color={theme.colors.lime[6]} />
+        <Text ml="xs">Seu exame está salvo localmente.</Text>
+      </Center>
+      <Flex direction={isDesktop ? "row" : "column"} justify="space-between">
+        <Flex
+          w={isDesktop ? "50%" : undefined}
+          justify="center"
+          align="center"
+          gap={8}
+          direction="column"
+          h="100%"
+        >
+          <Flex w="100%" justify="center">
+            <Flex direction="column" gap="md" w={300}>
+              <Title order={4}>Opções</Title>
+              <Switch
+                checked={options.showTitle}
+                onChange={() =>
+                  setOptions((s) => ({ ...s, showTitle: !s.showTitle }))
+                }
+                label="Mostrar enunciado"
+              />
+              <Button
+                onClick={() => {
+                  const metaCode = getMetaCode(examSession);
+                  if (!metaCode) return;
+                  setMetaCode(metaCode);
+                  open();
+                }}
+              >
+                Exportar
+              </Button>
+
+              <Button
+                onClick={() =>
+                  readMetaCode("ex: 0; form: letter; ans: 1-c, 2-d;")
+                }
+              >
+                Ler
+              </Button>
+            </Flex>
           </Flex>
-        </Box>
-        <Grid mt={50}>
-          {examSession.exam?.questions.map((question, i) => {
-            return (
-              <>
-                <Grid.Col span={2.4} key={i}>
+        </Flex>
+        <Flex
+          mt={isDesktop ? undefined : 50}
+          direction="column"
+          mih={700}
+          w={isDesktop ? "50%" : undefined}
+        >
+          <Grid>
+            {examSession.exam?.questions.map((question, i) => {
+              return (
+                <Grid.Col span={2.4} key={question.id}>
                   <Center>
                     <Button
-                      onClick={() => setSelectedQuestion(question)}
+                      onClick={() =>
+                        selectedQuestion?.id === question.id
+                          ? setSelectedQuestion(null)
+                          : setSelectedQuestion(question)
+                      }
                       variant={
                         selectedQuestion?.number === i + 1
                           ? "filled"
@@ -101,46 +164,49 @@ export default function PostExam() {
                     </Button>
                   </Center>
                 </Grid.Col>
-              </>
-            );
-          })}
-          <Card withBorder mt={20} w="100%">
-            {!selectedQuestion && (
-              <Text>
-                Selecione uma alternativa para visualizar mais detalhes
-              </Text>
-            )}
-            {selectedQuestion && (
-              <>
-                <Text fw={700} fz={18} mb={20}>
-                  Questão {selectedQuestion.number}
-                </Text>
-                <Flex direction="column">
-                  {selectedQuestion.alternatives.map((alt) => {
-                    const isUserAnswer = selectedAnswer?.id === alt.id;
-                    const isAnswer = alt.id === 0;
+              );
+            })}
+          </Grid>
+          <Divider mt={30} mb={20} />
+          <Card p={0} withBorder w="100%">
+            <ScrollArea p="lg" py={0} mah={510}>
+              <Box my="lg">
+                {!selectedQuestion && (
+                  <Text>
+                    Selecione uma alternativa para visualizar mais detalhes
+                  </Text>
+                )}
+                {selectedQuestion && (
+                  <QuestionBody
+                    question={selectedQuestion}
+                    showTitle={options.showTitle}
+                    alternatives={selectedQuestion.alternatives.map((alt) => {
+                      const isUserAnswer = selectedAnswer?.id === alt.id;
+                      const isAnswer = alt.id === 0;
 
-                    return (
-                      <Card
-                        p={8}
-                        mb={4}
-                        bd={isUserAnswer ? "1px solid blue.5" : undefined}
-                        bg={isAnswer ? "lime.2" : undefined}
-                      >
-                        <Flex align="center">
-                          <Avatar size="md" color="blue">
-                            {alternativeIdentifiers[alt.sequence]}
-                          </Avatar>
-                          <Text ml={20}>{alt?.label}</Text>
-                        </Flex>
-                      </Card>
-                    );
-                  })}
-                </Flex>
-              </>
-            )}
+                      return (
+                        <Card
+                          p={8}
+                          mb={4}
+                          bd={isUserAnswer ? "1px solid blue.5" : undefined}
+                          bg={isAnswer ? "lime.2" : undefined}
+                          key={alt.id}
+                        >
+                          <Flex align="center">
+                            <Avatar size="md" color="blue">
+                              {alternativeIdentifiers[alt.sequence]}
+                            </Avatar>
+                            <Text ml={20}>{alt?.label}</Text>
+                          </Flex>
+                        </Card>
+                      );
+                    })}
+                  />
+                )}
+              </Box>
+            </ScrollArea>
           </Card>
-        </Grid>
+        </Flex>
       </Flex>
     </Container>
   );

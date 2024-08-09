@@ -16,7 +16,7 @@ export type ExamSessionStoreType = {
 
 export const examSessionStoreDefaultData: ExamSessionType = {
   active: false,
-  questions: [],
+  answers: [],
   preForm: {
     name: '',
     information: ''

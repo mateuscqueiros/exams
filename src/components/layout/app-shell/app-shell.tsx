@@ -55,12 +55,14 @@ export function AppShell({ children }: React.PropsWithChildren) {
               <UnstyledButton className={classes.control}>
                 Support
               </UnstyledButton>
-              <UnstyledButton
-                className={classes.control}
-                onClick={() => examSession.endSession()}
-              >
-                End Session
-              </UnstyledButton>
+              {examSession.session?.active && (
+                <UnstyledButton
+                  className={classes.control}
+                  onClick={() => examSession.endSession()}
+                >
+                  End Session
+                </UnstyledButton>
+              )}
             </Group>
           </Group>
         </Group>

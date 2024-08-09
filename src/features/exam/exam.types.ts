@@ -17,7 +17,7 @@ export type ExamType = {
 
 export type ExamSessionType = {
   preForm: PreExamFormType,
-  questions: AnswerType[]
+  answers: AnswerType[]
   active: boolean
 };
 
@@ -37,6 +37,6 @@ export type AnswerType = {
 
 export type AlternativeType = {
   label: string;
-  id: number
-  sequence: number
+  id: number;
+  sequence: number;
 }

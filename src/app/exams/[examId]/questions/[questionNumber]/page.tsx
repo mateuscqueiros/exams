@@ -3,19 +3,12 @@ import {
   Alternative,
   AlternativeType,
   FinishButton,
+  QuestionBody,
   QuestionsMenu,
 } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
 import { examData } from "@/values";
-import {
-  Box,
-  Center,
-  Container,
-  Divider,
-  Flex,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Center, Container } from "@mantine/core";
 import { useState } from "react";
 
 export default function QuestionPage({
@@ -60,35 +53,29 @@ export default function QuestionPage({
       <Container w="99%" miw={{ md: 800 }}>
         <QuestionsMenu question={question} />
         <Center mb={100}>
-          <Flex direction="column" w="100%">
-            <Title order={4}>Questão {questionNumber}</Title>
-            <Text>{question.title}</Text>
-            <Divider my={20} />
-            <Box>
-              <Flex direction="column" gap={20}>
-                {question.alternatives.map((alt) => {
-                  const isSelected =
-                    selected === null
-                      ? selectedAlternative?.alternativeId === alt.id
-                      : selected === alt.id;
+          <QuestionBody
+            question={question}
+            alternatives={question.alternatives.map((alt) => {
+              const isSelected =
+                selected === null
+                  ? selectedAlternative?.alternativeId === alt.id
+                  : selected === alt.id;
 
-                  return (
-                    <Alternative
-                      name="alternative"
-                      label={alt.label}
-                      checked={isSelected}
-                      key={alt.id}
-                      value={alt.id}
-                      onSelect={(v) => {
-                        handleSelectAlternative(v);
-                        setSelected(v);
-                      }}
-                    />
-                  );
-                })}
-              </Flex>
-            </Box>
-          </Flex>
+              return (
+                <Alternative
+                  name="alternative"
+                  label={alt.label}
+                  checked={isSelected}
+                  key={alt.id}
+                  value={alt.id}
+                  onSelect={(v) => {
+                    handleSelectAlternative(v);
+                    setSelected(v);
+                  }}
+                />
+              );
+            })}
+          />
         </Center>
         {examSession.session.answers.length ===
           examSession.exam?.questions.length && <FinishButton />}
