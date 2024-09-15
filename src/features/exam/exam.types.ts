@@ -1,5 +1,11 @@
-import { Session } from "inspector";
 import { z } from "zod";
+
+export const parseSessionSchema = z.object({
+  sessionCode: z.string({ message: "O código da sessão é obrigatório" }),
+  answerKeyCode: z.string().optional(),
+});
+
+export type ParseSessionType = z.infer<typeof parseSessionSchema>
 
 export const preExamSchema = z.object({
   name: z.string().min(2, "O nome precisa ter 2 ou mais caracteres"),
@@ -16,8 +22,8 @@ export type ExamType = {
 }
 
 export type ExamSessionType = {
-  preForm: PreExamFormType,
-  answers: AnswerType[]
+  preForm: PreExamFormType | undefined,
+  answers: SessionAnswerType[]
   active: boolean
 };
 
@@ -29,7 +35,7 @@ export type QuestionType = {
   alternatives: AlternativeType[]
 }
 
-export type AnswerType = {
+export type SessionAnswerType = {
   questionId: number;
   number: number
   alternativeId: number;
@@ -39,4 +45,9 @@ export type AlternativeType = {
   label: string;
   id: number;
   sequence: number;
+}
+
+export type QuestionAnswerType = {
+  questionId: number;
+  alternativeId: number;
 }

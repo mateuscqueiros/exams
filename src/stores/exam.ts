@@ -1,13 +1,13 @@
 'use client'
 
 import { create } from "zustand";
-import { ExamSessionType, ExamType, PreExamFormType, QuestionType, AnswerType } from '../features/exam'
+import { ExamSessionType, ExamType, PreExamFormType, QuestionType, SessionAnswerType } from '../features/exam'
 import { toast } from "sonner";
 
 export type ExamSessionStoreType = {
   updatePreForm: (values: PreExamFormType) => void,
   removeQuestion: (questionId: QuestionType['id']) => void;
-  updateQuestion: (questionData: AnswerType) => void
+  updateQuestion: (questionData: SessionAnswerType) => void
   startSession: (examData: ExamType) => void;
   endSession: () => void;
 } & ExamSessionDataType;
@@ -33,7 +33,7 @@ export const useExamSessionStore = create<ExamSessionStoreType>((set) => ({
   endSession: () => set((state) => endSession(state)),
   updatePreForm: (preFormData: PreExamFormType) => set((state) => updatePreForm(state, preFormData)),
   removeQuestion: (questionId: QuestionType['id']) => set(state => removeQuestion(state, questionId)),
-  updateQuestion: (questionData: AnswerType) => set(state => updateQuestion(state, questionData))
+  updateQuestion: (questionData: SessionAnswerType) => set(state => updateQuestion(state, questionData))
 }))
 
 // export const useExamSessionStore = create(persist<ExamSessionStoreType>((set) => ({
@@ -49,7 +49,7 @@ export const useExamSessionStore = create<ExamSessionStoreType>((set) => ({
 //   name: 'exam-session-storage',
 // }))
 
-function updateQuestion(state: ExamSessionStoreType, questionData: AnswerType): ExamSessionStoreType {
+function updateQuestion(state: ExamSessionStoreType, questionData: SessionAnswerType): ExamSessionStoreType {
   if (!state.session) return state
 
   const questionExists = state.session.answers.some(q => q.questionId === questionData.questionId)

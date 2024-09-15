@@ -1,14 +1,17 @@
 "use client";
 
-import { AnswersPreview } from "@/features/exam";
+import { AnswersPreview, getMetaCode } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
-import { examData } from "@/values";
+import { examAnswers, examData } from "@/values";
 import { Center, Container, Text, useMantineTheme } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
 
 export default function PostExam() {
   const theme = useMantineTheme();
   const examSession = useExamSessionStore();
+  const answers = examAnswers;
+
+  console.log(getMetaCode(examSession));
 
   if (!examSession.session?.active) {
     examSession.startSession(examData);
@@ -33,7 +36,7 @@ export default function PostExam() {
         <IconCircleCheck color={theme.colors.lime[6]} />
         <Text ml="xs">Seu exame está salvo localmente.</Text>
       </Center>
-      <AnswersPreview examSession={examSession} />
+      <AnswersPreview answerKey={answers} examSession={examSession} />
     </Container>
   );
 }

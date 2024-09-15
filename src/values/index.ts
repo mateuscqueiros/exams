@@ -1,4 +1,4 @@
-import { ExamType } from "@/features/exam";
+import { ExamType, QuestionAnswerType, SessionAnswerType } from "@/features/exam";
 
 
 export const examData: ExamType = {
@@ -79,5 +79,16 @@ export const examData: ExamType = {
     }
   ]
 }
+
+export const examAnswers: QuestionAnswerType[] = [
+  {
+    questionId: 0,
+    alternativeId: 0
+  },
+  {
+    questionId: 1,
+    alternativeId: 3
+  }
+]
 
 export const allExams: ExamType[] = [examData]

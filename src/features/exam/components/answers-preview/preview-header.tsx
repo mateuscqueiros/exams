@@ -1,4 +1,4 @@
-import { ExamSessionDataType, ExamSessionStoreType } from "@/stores/exam";
+import { ExamSessionDataType } from "@/stores/exam";
 import { Button, Center, Grid } from "@mantine/core";
 import { QuestionType } from "../../exam.types";
 

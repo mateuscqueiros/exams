@@ -1,18 +1,24 @@
 import { Avatar, Box, Card, Flex, ScrollArea, Text } from "@mantine/core";
-import { AlternativeType, QuestionType } from "../../exam.types";
+import {
+  AlternativeType,
+  QuestionAnswerType,
+  QuestionType,
+} from "../../exam.types";
 import { QuestionBody } from "../question-body";
 import { AnswersPreviewOptionsType } from "./preview-options";
 
 export type AnswersPreviewBodyType = {
   selectedQuestion: QuestionType;
-  selectedAnswer: AlternativeType;
+  selectedAlternative: AlternativeType;
   options: AnswersPreviewOptionsType;
+  answer?: QuestionAnswerType;
 };
 
 export function AnswersPreviewBody({
   selectedQuestion,
-  selectedAnswer,
+  selectedAlternative,
   options,
+  answer,
 }: AnswersPreviewBodyType) {
   const alternativeIdentifiers = ["A", "B", "C", "D", "E"];
 
@@ -28,8 +34,10 @@ export function AnswersPreviewBody({
               question={selectedQuestion}
               showTitle={options.showTitle}
               alternatives={selectedQuestion.alternatives.map((alt) => {
-                const isUserAnswer = selectedAnswer?.id === alt.id;
-                const isAnswer = alt.id === 0;
+                const isUserAnswer = selectedAlternative?.id === alt.id;
+                const isAnswer = answer
+                  ? answer?.alternativeId === alt.id
+                  : undefined;
 
                 return (
                   <Card

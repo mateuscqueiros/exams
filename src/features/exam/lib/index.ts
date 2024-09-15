@@ -1,20 +1,20 @@
-import { ExamSessionDataType, ExamSessionStoreType } from "@/stores/exam";
-import { get } from "http";
-import { AlternativeType, AnswerType } from "../exam.types";
-import { MetaProcessType, ParsedAnswerType } from "../meta-code.types";
+import { ExamSessionDataType } from "@/stores/exam";
+import { MetaCodeProcessedType, ParsedAnswerType } from "../meta-code.types";
+import { ExamSessionType, ExamType, SessionAnswerType } from "../exam.types";
+import { Session } from "inspector";
 
 export function getMetaCode(data: ExamSessionDataType): string | undefined {
-  if (!data.exam || !data.session) throw Error('Ocorreu um erro ao exportar os metadados')
+  if (!data.exam || !data.session) return;
   const divider = ";";
   const questionDivider = ",";
 
-  const examMeta = `ex: ${data.exam.id}`;
-  const formatMeta = `form: letter`;
+  const examMeta = `ex:${data.exam.id}`;
+  const formatMeta = `form:letter`;
 
   const labels = ['a', 'b', 'c', 'd', 'e']
 
   const questionsList = data.exam.questions.map(question => {
-    const fallback = `${question.number}: nn`
+    const fallback = `${question.number}:nn`
     const answer = data.session?.answers.find(a => a.questionId === question.id)
 
     if (!answer) return fallback
@@ -26,12 +26,12 @@ export function getMetaCode(data: ExamSessionDataType): string | undefined {
     return question.number + "-" + labels[alternative?.sequence]
   })
 
-  const questionsMeta = 'ans: ' + questionsList.join(questionDivider + " ") + divider;
+  const questionsMeta = 'ans:' + questionsList.join(questionDivider) + divider;
 
-  return [examMeta, formatMeta, questionsMeta].join(divider + " ")
+  return [examMeta, formatMeta, questionsMeta].join(divider)
 }
 
-export function readMetaCode(metaCode: string): MetaProcessType | undefined {
+export function readMetaCode(metaCode: string): MetaCodeProcessedType | undefined {
   const labels = ['a', 'b', 'c', 'd', 'e']
   const allPairs = metaCode.split(";").map(p => p.trim()).filter(p => p)
 
@@ -44,17 +44,36 @@ export function readMetaCode(metaCode: string): MetaProcessType | undefined {
   const rawAnswers = getValue(allPairs, 'ans')
   const parsedAnswers: ParsedAnswerType[] | undefined = rawAnswers?.split(',').map(p => p.trim()).map(p => p.split('-')).map(p => ({ questionNumber: Number(p[0]), selectedAnswer: labels.indexOf(p[1]) }))
 
-  console.log({
-    examId,
-    format,
-    parsedAnswers
-  })
-
-  if (parsedAnswers === undefined || format === undefined || examId === undefined) throw Error('Não foi possível processar os metadados')
+  if (parsedAnswers === undefined || format === undefined || examId === undefined) return;
 
   return {
     examId,
     format,
     parsedAnswers
   }
+}
+
+export function getSessionFromParsedMetaCode(parsedMetaCode: MetaCodeProcessedType, examData: ExamType): ExamSessionDataType | undefined {
+  const answers: SessionAnswerType[] = parsedMetaCode.parsedAnswers.map(parsedAnswer => {
+    const question = examData.questions.find(q => q.number === parsedAnswer.questionNumber)
+
+    if (!question || !parsedAnswer) return;
+
+    return {
+      number: parsedAnswer.questionNumber,
+      alternativeId: parsedAnswer.selectedAnswer,
+      questionId: question?.id
+    }
+  }).filter(q => q !== undefined)
+
+  console.log('parsedddd', answers)
+
+  return {
+    exam: examData,
+    session: {
+      answers,
+      active: false,
+      preForm: undefined
+    }
+  };
 }

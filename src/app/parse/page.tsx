@@ -1,14 +1,67 @@
 "use client";
-import { AnswersPreview } from "@/features/exam";
+import { parseSessionSchema, ParseSessionType } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
-import { Container } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Flex,
+  Group,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { useForm, zodResolver } from "@mantine/form";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+// ex:0;form:letter;ans:1-c,2-d;
 
 export default function ParseExam() {
   const examSession = useExamSessionStore();
+  const router = useRouter();
+
+  const form = useForm<ParseSessionType>({
+    initialValues: {
+      sessionCode: "",
+      answerKeyCode: "",
+    },
+    validate: zodResolver(parseSessionSchema),
+  });
+
+  const handleSubmit = (values: ParseSessionType) => {
+    router.push(
+      `/parse/results?session=${values.sessionCode}&answer=${values.answerKeyCode}`,
+    );
+  };
 
   return (
-    <Container>
-      {examSession && <AnswersPreview examSession={examSession} />}
+    <Container maw={500}>
+      <Title order={1} mb={10}>
+        Verificar uma sessão
+      </Title>
+
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Flex direction="column" gap={20}>
+          <TextInput
+            styles={{
+              input: {
+                fontFamily: "monospace",
+              },
+            }}
+            label="Código da sua sessão"
+            required
+            {...form.getInputProps("sessionCode")}
+          />
+          <TextInput
+            placeholder="Opcional"
+            label="Gabarito"
+            {...form.getInputProps("answerKeyCode")}
+          />
+          <Group justify="flex-end">
+            <Button type="submit">Enviar</Button>
+          </Group>
+        </Flex>
+      </form>
+      {/*examSession && <AnswersPreview examSession={examSession} />*/}
     </Container>
   );
 }

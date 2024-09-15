@@ -3,7 +3,14 @@
 import { PreExamFormType, preExamSchema } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
 import { examData } from "@/values";
-import { Button, Container, Flex, Textarea, TextInput } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Flex,
+  Textarea,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useRouter } from "next/navigation";
@@ -40,7 +47,9 @@ export default function PreExamPage() {
 
   return (
     <Container maw={500}>
-      <h1>{examToDo.title}</h1>
+      <Title order={1} mb={10}>
+        {examToDo.title}
+      </Title>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Flex direction="column" gap={20}>
           <TextInput label="Nome" required {...form.getInputProps("name")} />
