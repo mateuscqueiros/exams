@@ -34,7 +34,16 @@ export function AnswerPreviewTable({
         : undefined;
 
     return (
-      <Table.Tr key={question?.id}>
+      <Table.Tr
+        key={question?.id}
+        bg={
+          showAnswers && answerKey
+            ? selectedAlternative?.id === answerToQuestion?.id
+              ? "lime.1"
+              : "red.1"
+            : undefined
+        }
+      >
         <Table.Td>{userAnswer.number}</Table.Td>
         {selectedAlternative && (
           <Table.Td>
