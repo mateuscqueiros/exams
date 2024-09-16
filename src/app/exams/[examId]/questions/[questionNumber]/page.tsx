@@ -51,7 +51,7 @@ export default function QuestionPage({
   return (
     <Box style={{ position: "relative" }}>
       <Container w="99%" miw={{ md: 800 }}>
-        <QuestionsMenu question={question} />
+        <QuestionsMenu selectedQuestion={question} />
         <Center mb={100}>
           <QuestionBody
             question={question}

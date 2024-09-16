@@ -1,9 +1,6 @@
-import { Avatar, Box, Card, Flex, ScrollArea, Text } from "@mantine/core";
-import {
-  AlternativeType,
-  QuestionAnswerType,
-  QuestionType,
-} from "../../exam.types";
+import { Box, Card, ScrollArea, Text } from "@mantine/core";
+import { AlternativeType, AnswerKeyType, QuestionType } from "../../exam.types";
+import { QuestionAlternativePreview } from "../question-alternative-preview";
 import { QuestionBody } from "../question-body";
 import { AnswersPreviewOptionsType } from "./preview-options";
 
@@ -11,7 +8,7 @@ export type AnswersPreviewBodyType = {
   selectedQuestion: QuestionType;
   selectedAlternative: AlternativeType;
   options: AnswersPreviewOptionsType;
-  answer?: QuestionAnswerType;
+  answer?: AnswerKeyType;
 };
 
 export function AnswersPreviewBody({
@@ -20,8 +17,6 @@ export function AnswersPreviewBody({
   options,
   answer,
 }: AnswersPreviewBodyType) {
-  const alternativeIdentifiers = ["A", "B", "C", "D", "E"];
-
   return (
     <Card p={0} withBorder w="100%">
       <ScrollArea p="lg" py={0} mah={510}>
@@ -33,27 +28,19 @@ export function AnswersPreviewBody({
             <QuestionBody
               question={selectedQuestion}
               showTitle={options.showTitle}
+              alternativeDir={options.showAlternativeBody ? "column" : "row"}
               alternatives={selectedQuestion.alternatives.map((alt) => {
                 const isUserAnswer = selectedAlternative?.id === alt.id;
-                const isAnswer = answer
-                  ? answer?.alternativeId === alt.id
-                  : undefined;
+                const isAnswer = answer?.alternativeId === alt.id;
 
                 return (
-                  <Card
-                    p={8}
-                    mb={4}
-                    bd={isUserAnswer ? "1px solid blue.5" : undefined}
-                    bg={isAnswer ? "lime.2" : undefined}
+                  <QuestionAlternativePreview
                     key={alt.id}
-                  >
-                    <Flex align="center">
-                      <Avatar size="md" color="blue">
-                        {alternativeIdentifiers[alt.sequence]}
-                      </Avatar>
-                      <Text ml={20}>{alt?.label}</Text>
-                    </Flex>
-                  </Card>
+                    alternative={alt}
+                    isUserAnswer={isUserAnswer}
+                    isAnswer={isAnswer}
+                    showAlternativeBody={options.showAlternativeBody}
+                  />
                 );
               })}
             />

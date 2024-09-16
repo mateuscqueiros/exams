@@ -47,7 +47,7 @@ export type AlternativeType = {
   sequence: number;
 }
 
-export type QuestionAnswerType = {
+export type AnswerKeyType = {
   questionId: number;
   alternativeId: number;
 }

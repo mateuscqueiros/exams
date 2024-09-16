@@ -1,7 +1,7 @@
-import { Flex, Switch, Title } from "@mantine/core";
+import { Checkbox, Flex, Switch, SwitchProps, Title } from "@mantine/core";
 import { ReactElement } from "react";
 
-export type AnswersPreviewOptionsComponentType = {
+export type AnswersPreviewOptionsProps = {
   options: AnswersPreviewOptionsType;
   setOptions: any;
   otherOptions: ReactElement;
@@ -9,23 +9,75 @@ export type AnswersPreviewOptionsComponentType = {
 
 export type AnswersPreviewOptionsType = {
   showTitle: boolean;
+  showAlternativeBody: boolean;
+  showAnswers: boolean;
+  tableMode: boolean;
 };
+
+function OptionSwitch({
+  options,
+  setOptions,
+  optionKey,
+  label,
+  ...rest
+}: {
+  options: AnswersPreviewOptionsType;
+  setOptions: (value: AnswersPreviewOptionsType) => void;
+  optionKey: keyof AnswersPreviewOptionsType;
+  label: string;
+} & SwitchProps) {
+  let result: AnswersPreviewOptionsType = { ...options };
+  result[optionKey] = !result[optionKey];
+  return (
+    <Switch
+      checked={options[optionKey]}
+      onChange={() =>
+        setOptions({
+          ...options,
+          ...result,
+        })
+      }
+      label={label}
+      {...rest}
+    />
+  );
+}
 
 export function AnswerPreviewOptions({
   options,
   setOptions,
   otherOptions,
-}: AnswersPreviewOptionsComponentType) {
+}: AnswersPreviewOptionsProps) {
   return (
     <Flex w="100%" justify="center">
       <Flex direction="column" gap="md" w={300}>
         <Title order={4}>Opções</Title>
-        <Switch
-          checked={options.showTitle}
+        <Checkbox
+          checked={options.tableMode}
           onChange={() =>
-            setOptions((s: any) => ({ ...s, showTitle: !s.showTitle }))
+            setOptions({ ...options, tableMode: !options.tableMode })
           }
+          label="Ver em forma de tabela"
+        ></Checkbox>
+        <OptionSwitch
+          optionKey="showAnswers"
+          label="Mostrar respostas"
+          options={options}
+          setOptions={setOptions}
+        />
+        <OptionSwitch
+          optionKey="showTitle"
           label="Mostrar enunciado"
+          options={options}
+          setOptions={setOptions}
+          disabled={options.tableMode}
+        />
+        <OptionSwitch
+          optionKey="showAlternativeBody"
+          label="Mostrar alternativas"
+          options={options}
+          setOptions={setOptions}
+          disabled={options.tableMode}
         />
         {otherOptions}
       </Flex>

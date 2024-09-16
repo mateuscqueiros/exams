@@ -1,7 +1,6 @@
 import { ExamSessionDataType } from "@/stores/exam";
 import { MetaCodeProcessedType, ParsedAnswerType } from "../meta-code.types";
-import { ExamSessionType, ExamType, SessionAnswerType } from "../exam.types";
-import { Session } from "inspector";
+import { ExamType, SessionAnswerType } from "../exam.types";
 
 export function getMetaCode(data: ExamSessionDataType): string | undefined {
   if (!data.exam || !data.session) return;

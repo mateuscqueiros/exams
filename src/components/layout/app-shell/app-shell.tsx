@@ -42,7 +42,12 @@ export function AppShell({ children }: React.PropsWithChildren) {
           <Group justify="space-between" style={{ flex: 1 }}>
             <IconQuestionMark />
             <Group ml="xl" gap={0} visibleFrom="sm">
-              <UnstyledButton className={classes.control}>Home</UnstyledButton>
+              <UnstyledButton
+                onClick={() => router.push(`/parse`)}
+                className={classes.control}
+              >
+                Home
+              </UnstyledButton>
               <UnstyledButton
                 className={classes.control}
                 onClick={() => router.push(`/exams/react-1`)}

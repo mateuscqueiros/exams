@@ -9,10 +9,10 @@ import { useParams } from "next/navigation";
 import { QuestionType } from "../exam.types";
 
 export type QuestionsMenuType = {
-  question: QuestionType;
+  selectedQuestion: QuestionType;
 };
 
-export function QuestionsMenu({ question }: QuestionsMenuType) {
+export function QuestionsMenu({ selectedQuestion }: QuestionsMenuType) {
   const params = useParams<{ examId: string; questionId: string }>();
   const [opened, { close, toggle }] = useDisclosure(false);
   const examSession = useExamSessionStore();
@@ -44,7 +44,7 @@ export function QuestionsMenu({ question }: QuestionsMenuType) {
         <Text size="sm">30 questões pendentes</Text>
         <Grid mt={20} gutter={10}>
           {examSession.exam?.questions.map((question, i) => {
-            const isSelected = question.number === question.number;
+            const isSelected = question.number === selectedQuestion.number;
             const isAnswered = selectedQuestionsNumbers.includes(
               question.number,
             );
@@ -57,10 +57,8 @@ export function QuestionsMenu({ question }: QuestionsMenuType) {
                     size="sm"
                     component={Link}
                     href={`/exams/${params.examId}/questions/${question.number}`}
-                    color={
-                      isSelected ? undefined : isAnswered ? "lime.4" : undefined
-                    }
-                    variant={isAnswered ? "filled" : "subtle"}
+                    color={isAnswered ? "lime.5" : undefined}
+                    variant={isSelected ? "filled" : "subtle"}
                   >
                     {question.number}
                   </Button>

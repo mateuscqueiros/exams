@@ -25,14 +25,6 @@ export function Alternative({
 }: AlternativeComponentType) {
   const theme = useMantineTheme();
 
-  const icons = [
-    IconLetterA,
-    IconLetterB,
-    IconLetterC,
-    IconLetterD,
-    IconLetterE,
-  ];
-
   return (
     <UnstyledButton onClick={() => onSelect(value)}>
       <Card

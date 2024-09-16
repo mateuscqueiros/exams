@@ -15,3 +15,5 @@ export const parsedMetaCodeToAnswerKey = (parsedMetaCode: MetaCodeProcessedType,
       };
     })
     .filter((q) => q !== undefined);
+
+export const alternativeIdentifiers = ["A", "B", "C", "D", "E"];

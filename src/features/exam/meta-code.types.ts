@@ -1,4 +1,4 @@
-export type MetaProcessType = {
+export type MetaCodeProcessedType = {
   examId: number;
   format: string;
   parsedAnswers: ParsedAnswerType[]

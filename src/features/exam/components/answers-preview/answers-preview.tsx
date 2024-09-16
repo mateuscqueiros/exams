@@ -2,9 +2,8 @@ import { ExamSessionDataType } from "@/stores/exam";
 import { Button, Divider, Flex, Text } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useState } from "react";
-import { toast } from "sonner";
 import { AlternativeType, AnswerKeyType, QuestionType } from "../../exam.types";
-import { getMetaCode, readMetaCode } from "../../lib";
+import { getMetaCode } from "../../lib";
 import { MetaCodeModal } from "../metacode-modal";
 import { AnswersPreviewBody } from "./preview-body";
 import { AnswersPreviewHeader } from "./preview-header";
@@ -12,6 +11,7 @@ import {
   AnswerPreviewOptions,
   AnswersPreviewOptionsType,
 } from "./preview-options";
+import { AnswerPreviewTable } from "./preview-table";
 
 export type AnswersPreview = {
   examSession: ExamSessionDataType;
@@ -44,6 +44,9 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
   );
   const [options, setOptions] = useState<AnswersPreviewOptionsType>({
     showTitle: true,
+    showAlternativeBody: true,
+    showAnswers: true,
+    tableMode: false,
   });
 
   const selectedAlternative = selectedQuestion
@@ -51,7 +54,7 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
     : undefined;
 
   const selectedQuestionAnswer =
-    selectedQuestion && answerKey
+    options.showAnswers && selectedQuestion && answerKey
       ? answerKey.find((ans) => ans.questionId === selectedQuestion.id)
       : undefined;
 
@@ -83,25 +86,13 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
                 <>
                   <Button
                     onClick={() => {
-                      try {
-                        const metaCode = getMetaCode(examSession);
-                        if (!metaCode) return;
-                        setMetaCode(metaCode);
-                        open();
-                      } catch (err: any) {
-                        toast.error(err.message);
-                      }
+                      const metaCode = getMetaCode(examSession);
+                      if (metaCode === undefined) return;
+                      setMetaCode(metaCode);
+                      open();
                     }}
                   >
                     Exportar
-                  </Button>
-
-                  <Button
-                    onClick={() =>
-                      readMetaCode("ex: 0; form: letter; ans: 1-c, 2-d;")
-                    }
-                  >
-                    Ler
                   </Button>
                 </>
               }
@@ -117,19 +108,30 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
               mih={700}
               w={isDesktop ? "50%" : undefined}
             >
-              <AnswersPreviewHeader
-                selectedQuestion={selectedQuestion}
-                setSelectedQuestion={setSelectedQuestion}
-                examSession={examSession}
-              />
-              <Divider mt={30} mb={20} />
-              {selectedQuestion && selectedAlternative && (
-                <AnswersPreviewBody
-                  options={options}
-                  selectedAlternative={selectedAlternative}
-                  selectedQuestion={selectedQuestion}
-                  answer={selectedQuestionAnswer}
+              {options.tableMode ? (
+                <AnswerPreviewTable
+                  questions={examSession.exam.questions}
+                  userAnswers={examSession.session.answers}
+                  answerKey={answerKey}
+                  showAnswers={options.showAnswers}
                 />
+              ) : (
+                <>
+                  <AnswersPreviewHeader
+                    selectedQuestion={selectedQuestion}
+                    setSelectedQuestion={setSelectedQuestion}
+                    examSession={examSession}
+                  />
+                  <Divider mt={30} mb={20} />
+                  {selectedQuestion && selectedAlternative && (
+                    <AnswersPreviewBody
+                      options={options}
+                      selectedAlternative={selectedAlternative}
+                      selectedQuestion={selectedQuestion}
+                      answer={selectedQuestionAnswer}
+                    />
+                  )}
+                </>
               )}
             </Flex>
           )}

@@ -1,6 +1,5 @@
 "use client";
 import { parseSessionSchema, ParseSessionType } from "@/features/exam";
-import { useExamSessionStore } from "@/stores/exam";
 import {
   Button,
   Container,
@@ -11,12 +10,10 @@ import {
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 // ex:0;form:letter;ans:1-c,2-d;
 
 export default function ParseExam() {
-  const examSession = useExamSessionStore();
   const router = useRouter();
 
   const form = useForm<ParseSessionType>({
