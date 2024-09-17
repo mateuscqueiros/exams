@@ -1,12 +1,5 @@
 import { Card, Radio, UnstyledButton, useMantineTheme } from "@mantine/core";
-import {
-  IconCheck,
-  IconLetterA,
-  IconLetterB,
-  IconLetterC,
-  IconLetterD,
-  IconLetterE,
-} from "@tabler/icons-react";
+import { IconCheck } from "@tabler/icons-react";
 
 export type AlternativeComponentType = {
   label: string;

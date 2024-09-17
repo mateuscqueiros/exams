@@ -1,3 +1,4 @@
+import { createExams } from "@/features/exam/__mocks__/question";
 import { Card, Container, Title } from "@mantine/core";
 import Link from "next/link";
 

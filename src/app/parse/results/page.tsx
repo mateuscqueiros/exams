@@ -33,10 +33,10 @@ export default function ParseResultsPage() {
   /* Parse user answer from params */
   const parsedSessionMetaCode =
     sessionMetaCodeParam && readMetaCode(sessionMetaCodeParam);
-  const sessionUserAnswers =
+  /* const sessionUserAnswers =
     parsedSessionMetaCode && examData
       ? getSessionFromParsedMetaCode(parsedSessionMetaCode, examData)
-      : undefined;
+      : undefined; */
 
   useEffect(() => {
     /* Get exam data */
@@ -49,8 +49,6 @@ export default function ParseResultsPage() {
         getSessionFromParsedMetaCode(parsedSessionMetaCode, examData),
       );
   }, [examData, sessionMetaCodeParam, answerMetaCodeParam]);
-
-  console.log(currentSession);
 
   if (!sessionMetaCodeParam) return "Metacódigo da sessão não encontrado";
 

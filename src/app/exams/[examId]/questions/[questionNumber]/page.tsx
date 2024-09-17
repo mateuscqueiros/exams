@@ -36,8 +36,6 @@ export default function QuestionPage({
     (q) => q.number === Number(questionNumber),
   );
 
-  console.log(examSession.session);
-
   function handleSelectAlternative(selectedAnswer: AlternativeType["id"]) {
     if (question === undefined) return;
 

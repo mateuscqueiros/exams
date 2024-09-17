@@ -1,6 +1,10 @@
 "use client";
 
 import { PreExamFormType, preExamSchema } from "@/features/exam";
+import {
+  createExams,
+  createRandomMetaCode,
+} from "@/features/exam/__mocks__/question";
 import { useExamSessionStore } from "@/stores/exam";
 import { examData } from "@/values";
 import {

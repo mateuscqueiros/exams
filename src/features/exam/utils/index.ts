@@ -1,5 +1,7 @@
 import { MetaCodeProcessedType } from "../meta-code.types";
-import { ExamType, AnswerKeyType } from "../exam.types";
+import { ExamType, AnswerKeyType, QuestionType, AlternativeType } from "../exam.types";
+import { ExamSessionDataType, ExamSessionStoreType } from "@/stores/exam";
+import { examData } from "@/values";
 
 export const parsedMetaCodeToAnswerKey = (parsedMetaCode: MetaCodeProcessedType, examData: ExamType): AnswerKeyType[] =>
   parsedMetaCode.parsedAnswers
@@ -15,5 +17,38 @@ export const parsedMetaCodeToAnswerKey = (parsedMetaCode: MetaCodeProcessedType,
       };
     })
     .filter((q) => q !== undefined);
+
+export function getSelectedAnswer(
+  question: QuestionType,
+  examSession: ExamSessionDataType,
+): AlternativeType | undefined {
+  const answerInSession = examSession.session?.answers.find(
+    (q) => q.questionId === question.id,
+  );
+
+  if (!answerInSession) return;
+
+  const selectedAlternative = question.alternatives.find(
+    (alt) => alt.id === answerInSession.alternativeId,
+  );
+
+  return selectedAlternative;
+}
+
+export function populateSession(examSession: ExamSessionStoreType) {
+
+  examSession.startSession(examData);
+  examSession.updateQuestion({
+    questionId: 0,
+    alternativeId: 2,
+    number: 1,
+  });
+
+  examSession.updateQuestion({
+    questionId: 1,
+    alternativeId: 3,
+    number: 2,
+  });
+}
 
 export const alternativeIdentifiers = ["A", "B", "C", "D", "E"];

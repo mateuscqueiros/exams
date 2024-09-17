@@ -1,6 +1,6 @@
 import { Avatar, Card, Flex, Text } from "@mantine/core";
-import { AlternativeType } from "../exam.types";
-import { alternativeIdentifiers } from "../utils";
+import { AlternativeType } from "../../exam.types";
+import { alternativeIdentifiers } from "../../utils";
 
 export type QuestionAlternativeProps = {
   alternative: AlternativeType;

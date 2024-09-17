@@ -41,7 +41,11 @@ export function QuestionsMenu({ selectedQuestion }: QuestionsMenuType) {
         onClose={close}
         title="Questões"
       >
-        <Text size="sm">30 questões pendentes</Text>
+        <Text size="sm">
+          {examSession.exam.questions.length -
+            examSession.session.answers.length}{" "}
+          questões pendentes
+        </Text>
         <Grid mt={20} gutter={10}>
           {examSession.exam?.questions.map((question, i) => {
             const isSelected = question.number === selectedQuestion.number;
@@ -58,7 +62,7 @@ export function QuestionsMenu({ selectedQuestion }: QuestionsMenuType) {
                     component={Link}
                     href={`/exams/${params.examId}/questions/${question.number}`}
                     color={isAnswered ? "lime.5" : undefined}
-                    variant={isSelected ? "filled" : "subtle"}
+                    variant={isSelected ? "filled" : "outline"}
                   >
                     {question.number}
                   </Button>

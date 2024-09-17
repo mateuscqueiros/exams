@@ -1,9 +1,11 @@
 import { ExamSessionDataType } from "@/stores/exam";
-import { Button, Divider, Flex, Text } from "@mantine/core";
+import { Divider, Flex, Text } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useState } from "react";
-import { AlternativeType, AnswerKeyType, QuestionType } from "../../exam.types";
+import { AnswerKeyType, QuestionType } from "../../exam.types";
 import { getMetaCode } from "../../lib";
+import { getSelectedAnswer } from "../../utils";
+import { AddAnswerKeyModal } from "../add-answer-key-modal";
 import { MetaCodeModal } from "../metacode-modal";
 import { AnswersPreviewBody } from "./preview-body";
 import { AnswersPreviewHeader } from "./preview-header";
@@ -18,27 +20,19 @@ export type AnswersPreview = {
   answerKey?: AnswerKeyType[];
 };
 
-function getSelectedAnswer(
-  question: QuestionType,
-  examSession: ExamSessionDataType,
-): AlternativeType | undefined {
-  const answerInSession = examSession.session?.answers.find(
-    (q) => q.questionId === question.id,
-  );
-
-  if (!answerInSession) return;
-
-  const selectedAlternative = question.alternatives.find(
-    (alt) => alt.id === answerInSession.alternativeId,
-  );
-
-  return selectedAlternative;
-}
-
-export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
+export function AnswersPreview({
+  examSession,
+  answerKey: propAnswerKey,
+}: AnswersPreview) {
   const isDesktop = useMediaQuery("(min-width: 48em)");
-  const [metaCodeModalOpened, { open, close }] = useDisclosure(false);
+  const [metaCodeModalOpened, { open: metaOpen, close: metaClose }] =
+    useDisclosure(false);
+  const [addAnswerKeyModal, { open: answerOpen, close: answerClose }] =
+    useDisclosure(false);
   const [metaCode, setMetaCode] = useState<string | null>(null);
+  const [answerKey, setAnswerKey] = useState<AnswerKeyType[] | undefined>(
+    propAnswerKey,
+  );
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionType | null>(
     null,
   );
@@ -71,6 +65,13 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
             close={close}
             code={metaCode}
           />
+          <AddAnswerKeyModal
+            opened={addAnswerKeyModal}
+            close={answerClose}
+            onFinish={(value) => {
+              setAnswerKey(value);
+            }}
+          />
           <Flex
             w={isDesktop ? "50%" : undefined}
             justify="center"
@@ -82,20 +83,17 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
             <AnswerPreviewOptions
               options={options}
               setOptions={setOptions}
-              otherOptions={
-                <>
-                  <Button
-                    onClick={() => {
-                      const metaCode = getMetaCode(examSession);
-                      if (metaCode === undefined) return;
-                      setMetaCode(metaCode);
-                      open();
-                    }}
-                  >
-                    Exportar
-                  </Button>
-                </>
-              }
+              hasAnswers={answerKey !== undefined}
+              onExport={() => {
+                const metaCode = getMetaCode(examSession);
+                if (metaCode === undefined) return;
+                setMetaCode(metaCode);
+                open();
+              }}
+              onAddAnswer={() => {
+                answerOpen();
+                return;
+              }}
             />
           </Flex>
           {!(Number(examSession.exam?.questions.length) > 0) && (
@@ -108,14 +106,15 @@ export function AnswersPreview({ examSession, answerKey }: AnswersPreview) {
               mih={700}
               w={isDesktop ? "50%" : undefined}
             >
-              {options.tableMode ? (
+              {options.tableMode && (
                 <AnswerPreviewTable
                   questions={examSession.exam.questions}
                   userAnswers={examSession.session.answers}
                   answerKey={answerKey}
                   showAnswers={options.showAnswers}
                 />
-              ) : (
+              )}
+              {!options.tableMode && (
                 <>
                   <AnswersPreviewHeader
                     selectedQuestion={selectedQuestion}

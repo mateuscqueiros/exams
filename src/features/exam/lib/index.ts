@@ -65,8 +65,6 @@ export function getSessionFromParsedMetaCode(parsedMetaCode: MetaCodeProcessedTy
     }
   }).filter(q => q !== undefined)
 
-  console.log('parsedddd', answers)
-
   return {
     exam: examData,
     session: {

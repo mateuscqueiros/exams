@@ -43,27 +43,24 @@ export function AppShell({ children }: React.PropsWithChildren) {
             <IconQuestionMark />
             <Group ml="xl" gap={0} visibleFrom="sm">
               <UnstyledButton
-                onClick={() => router.push(`/parse`)}
                 className={classes.control}
+                onClick={() => router.push(`/exams`)}
               >
                 Home
               </UnstyledButton>
               <UnstyledButton
+                onClick={() => router.push(`/parse`)}
                 className={classes.control}
-                onClick={() => router.push(`/exams/react-1`)}
               >
-                Blog
-              </UnstyledButton>
-              <UnstyledButton className={classes.control}>
-                Contacts
-              </UnstyledButton>
-              <UnstyledButton className={classes.control}>
-                Support
+                Parse
               </UnstyledButton>
               {examSession.session?.active && (
                 <UnstyledButton
                   className={classes.control}
-                  onClick={() => examSession.endSession()}
+                  onClick={() => {
+                    examSession.endSession();
+                    router.push("/exams");
+                  }}
                 >
                   End Session
                 </UnstyledButton>
