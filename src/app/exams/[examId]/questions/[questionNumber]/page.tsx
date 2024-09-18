@@ -20,9 +20,9 @@ export default function QuestionPage({
   const examSession = useExamSessionStore();
 
   if (!examSession.session?.active) {
-    examSession.startSession(examData);
-    return;
-    // return <>Não existe uma sessão ativa para este teste</>;
+    // examSession.startSession(examData);
+    // return;
+    return <>Não existe uma sessão ativa para este teste</>;
   }
 
   const question = examSession.exam?.questions.find(

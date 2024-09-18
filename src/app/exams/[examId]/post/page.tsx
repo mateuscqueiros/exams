@@ -1,6 +1,6 @@
 "use client";
 
-import { AnswersPreview, getMetaCode } from "@/features/exam";
+import { AnswersPreview } from "@/features/exam";
 import { useExamSessionStore } from "@/stores/exam";
 import { examAnswers } from "@/values";
 import { Container, useMantineTheme } from "@mantine/core";

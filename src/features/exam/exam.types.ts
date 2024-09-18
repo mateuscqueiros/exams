@@ -15,13 +15,15 @@ export const preExamSchema = z.object({
 export type PreExamFormType = z.infer<typeof preExamSchema>;
 
 export type ExamType = {
-  id: number | undefined
-  title: string,
+  id: number | undefined;
+  image: string | undefined;
+  title: string
   questions: QuestionType[]
   slug: string
+  description: string;
 }
 
-export type ExamSessionType = {
+export type SessionType = {
   preForm: PreExamFormType | undefined,
   answers: SessionAnswerType[]
   active: boolean

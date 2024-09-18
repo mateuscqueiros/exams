@@ -1,3 +1,4 @@
+import "@mantine/carousel/styles.css";
 import "@mantine/core/styles.css";
 
 import { AppShell } from "@/components/layout";
@@ -11,6 +12,7 @@ export const metadata = {
 
 const theme = createTheme({
   cursorType: "pointer",
+  primaryColor: "orange",
   other: {
     colors: {
       positive: "lime.4",
@@ -29,7 +31,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>
+        <MantineProvider defaultColorScheme="dark" theme={theme}>
           <AppShell>{children}</AppShell>
         </MantineProvider>
         <Toaster richColors position="bottom-left" style={{ bottom: 100 }} />

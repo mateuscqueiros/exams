@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from "zustand";
-import { ExamSessionType, ExamType, PreExamFormType, QuestionType, SessionAnswerType } from '../features/exam'
+import { SessionType, ExamType, PreExamFormType, QuestionType, SessionAnswerType } from '../features/exam'
 import { toast } from "sonner";
 
 export type ExamSessionStoreType = {
@@ -14,10 +14,10 @@ export type ExamSessionStoreType = {
 
 export type ExamSessionDataType = {
   exam: ExamType | undefined;
-  session: ExamSessionType | undefined;
+  session: SessionType | undefined;
 }
 
-export const examSessionStoreDefaultData: ExamSessionType = {
+export const examSessionStoreDefaultData: SessionType = {
   active: false,
   answers: [],
   preForm: {
@@ -121,7 +121,7 @@ function endSession(state: ExamSessionStoreType): ExamSessionStoreType {
     return state
   }
 
-  toast.success(`Sessão ${state.exam?.title} finalizada`)
+  toast.warning(`Sessão ${state.exam?.title} encerrada`)
 
   return {
     ...state,

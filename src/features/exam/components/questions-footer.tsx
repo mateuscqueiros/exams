@@ -63,7 +63,6 @@ export function QuestionsFooter({ question }: QuestionFooterType) {
       w="100%"
       h={isMobile ? 120 : 80}
       px={30}
-      bg="white"
     >
       <Flex align="center" direction="column" justify="center" h="100%">
         <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
