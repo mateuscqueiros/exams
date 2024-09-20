@@ -2,7 +2,7 @@
 
 import { Affix, Button, Flex, Progress, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useParams, useRouter } from "next/navigation";
+import { useNavigate, useParams } from "react-router-dom";
 import { QuestionType } from "../exam.types";
 import { useExamSessionStore } from "../stores";
 
@@ -13,7 +13,7 @@ export type QuestionFooterType = {
 export function QuestionsFooter({ question }: QuestionFooterType) {
   const examSession = useExamSessionStore();
   const params = useParams();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   if (!examSession.session?.active) return <></>;
 
@@ -68,13 +68,13 @@ export function QuestionsFooter({ question }: QuestionFooterType) {
         <Flex hiddenFrom={mobileBreakpoint} w="100%" justify="space-between">
           <Button
             disabled={!hasPreviousQuestion}
-            onClick={() => router.push(previousQuestionURL)}
+            onClick={() => navigate(previousQuestionURL)}
           >
             Anterior
           </Button>
           <Button
             disabled={!hasNextQuestion}
-            onClick={() => router.push(nextQuestionURL)}
+            onClick={() => navigate(nextQuestionURL)}
           >
             Próxima
           </Button>
@@ -83,7 +83,7 @@ export function QuestionsFooter({ question }: QuestionFooterType) {
           <Button
             disabled={!hasPreviousQuestion}
             visibleFrom={mobileBreakpoint}
-            onClick={() => router.push(previousQuestionURL)}
+            onClick={() => navigate(previousQuestionURL)}
           >
             Anterior
           </Button>
@@ -106,7 +106,7 @@ export function QuestionsFooter({ question }: QuestionFooterType) {
             </Text>
           </Flex>
           <Button
-            onClick={() => router.push(nextQuestionURL)}
+            onClick={() => navigate(nextQuestionURL)}
             disabled={!hasNextQuestion}
             visibleFrom={mobileBreakpoint}
           >

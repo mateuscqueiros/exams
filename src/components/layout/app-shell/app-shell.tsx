@@ -1,7 +1,7 @@
 "use client";
 
-import { QuestionsFooter } from "@/features/exam";
-import { useExamSessionStore } from "@/stores/exam";
+import { QuestionsFooter } from "@/features/exams/components/questions-footer";
+import { useExamSessionStore } from "@/features/exams/stores";
 import {
   Burger,
   Group,
@@ -10,14 +10,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconQuestionMark } from "@tabler/icons-react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import classes from "./app-shell.module.css";
 
-export function AppShell({ children }: React.PropsWithChildren) {
+export function AppShell() {
   const [opened, { toggle }] = useDisclosure();
   const examSession = useExamSessionStore();
-  const router = useRouter();
-  const pathname = usePathname();
+  const navigate = useNavigate();
+  const location = useLocation();
   const params = useParams<{ questionNumber: string }>();
 
   const currentQuestion =
@@ -33,7 +33,7 @@ export function AppShell({ children }: React.PropsWithChildren) {
     const examSlug = examSession.exam?.slug;
 
     if (!examSlug) return true;
-    if (!pathname.includes(examSlug)) return false;
+    if (!location.pathname.includes(examSlug)) return false;
     return true;
   };
 
@@ -55,12 +55,12 @@ export function AppShell({ children }: React.PropsWithChildren) {
             <Group ml="xl" gap={0} visibleFrom="sm">
               <UnstyledButton
                 className={classes.control}
-                onClick={() => router.push(`/exams`)}
+                onClick={() => navigate(`/exams`)}
               >
                 Home
               </UnstyledButton>
               <UnstyledButton
-                onClick={() => router.push(`/parse`)}
+                onClick={() => navigate(`/parse`)}
                 className={classes.control}
               >
                 Parse
@@ -71,9 +71,7 @@ export function AppShell({ children }: React.PropsWithChildren) {
                   <UnstyledButton
                     className={classes.control}
                     onClick={() => {
-                      router.push(
-                        `/exams/${examSession.exam?.slug}/questions/1`,
-                      );
+                      navigate(`/exams/${examSession.exam?.slug}/questions/1`);
                     }}
                   >
                     Return to Session
@@ -84,7 +82,7 @@ export function AppShell({ children }: React.PropsWithChildren) {
                   className={classes.control}
                   onClick={() => {
                     examSession.endSession();
-                    router.push("/exams");
+                    navigate("/exams");
                   }}
                 >
                   End Session
@@ -103,7 +101,9 @@ export function AppShell({ children }: React.PropsWithChildren) {
         <UnstyledButton className={classes.control}>Support</UnstyledButton>
       </MantineAppShell.Navbar>
 
-      <MantineAppShell.Main>{children}</MantineAppShell.Main>
+      <MantineAppShell.Main>
+        <Outlet />
+      </MantineAppShell.Main>
 
       {examSession.session?.active && currentQuestion && (
         <QuestionsFooter question={currentQuestion} />

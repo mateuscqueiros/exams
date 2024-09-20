@@ -1,4 +1,5 @@
 import { MainErrorFallback } from "@/components/errors/main";
+import { AppShell } from "@/components/layout";
 import { queryConfig } from "@/lib/react-query";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

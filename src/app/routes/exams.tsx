@@ -1,5 +1,6 @@
 "use client";
 
+import { AppShell } from "@/components/layout";
 import { ExamCard, ExamCarousel, PageSection } from "@/components/ui/home";
 import { FeaturedExam } from "@/components/ui/home/feature-exam";
 import { getExams } from "@/features/exams/api";
