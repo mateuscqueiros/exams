@@ -89,6 +89,7 @@ export function AnswersPreview({
                 if (metaCode === undefined) return;
                 setMetaCode(metaCode);
                 open();
+                return;
               }}
               onAddAnswer={() => {
                 answerOpen();

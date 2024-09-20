@@ -18,7 +18,7 @@ export function QuestionBody({
   return (
     <Flex direction="column" w="100%">
       <Title order={4}>Questão {question.number}</Title>
-      {showTitle && <Text>{question.title}</Text>} <Divider my={20} />
+      {showTitle && <Text>{question.statement}</Text>} <Divider my={20} />
       <Box>
         <Flex
           direction={alternativeDir}

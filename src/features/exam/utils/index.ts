@@ -36,8 +36,8 @@ export function getSelectedAnswer(
 }
 
 export function populateSession(examSession: ExamSessionStoreType) {
-
   examSession.startSession(examData);
+
   examSession.updateQuestion({
     questionId: 0,
     alternativeId: 2,
@@ -48,6 +48,24 @@ export function populateSession(examSession: ExamSessionStoreType) {
     questionId: 1,
     alternativeId: 3,
     number: 2,
+  });
+
+  examSession.updateQuestion({
+    questionId: 2,
+    alternativeId: 1,
+    number: 3,
+  });
+
+  examSession.updateQuestion({
+    questionId: 3,
+    alternativeId: 4,
+    number: 4,
+  });
+
+  examSession.updateQuestion({
+    questionId: 4,
+    alternativeId: 0,
+    number: 5,
   });
 }
 

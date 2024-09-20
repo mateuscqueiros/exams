@@ -10,6 +10,7 @@ export type CarouselProps<T = ExamType> = {
 };
 
 export function ExamCarousel({ items, render, keyProp = "id" }: CarouselProps) {
+  console.log("i", items);
   const theme = useMantineTheme();
   return (
     <MantineCarousel

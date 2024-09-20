@@ -20,7 +20,6 @@ export default function PostExam() {
     <Container maw={1200}>
       <AnswersPreview
         //answerKey={answers}
-        answerKey={undefined}
         examSession={examSession}
       />
     </Container>

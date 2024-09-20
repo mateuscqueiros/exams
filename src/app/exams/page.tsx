@@ -1,22 +1,20 @@
 "use client";
+
 import { ExamCard, ExamCarousel, PageSection } from "@/components/ui";
 import { FeaturedExam } from "@/components/ui/home/feature-exam";
 import { ExamType } from "@/features/exam";
 import { getExams } from "@/features/exam/api";
 import { Container, Flex } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 
 export default function ExamSelectionPage() {
-  const isMobile = useMediaQuery(`(max-width: 48em)`);
-
   const [exams, setExams] = useState<ExamType[]>([]);
-  const featuredExam = exams[0];
-
-  console.log(exams);
+  const featuredExam = exams.length > 0 ? exams[0] : undefined;
 
   useEffect(() => {
-    getExams().then((data) => setExams(data));
+    getExams()
+      .then((data) => setExams(data as ExamType[]))
+      .catch((err) => console.log(err));
   }, []);
 
   const images = [

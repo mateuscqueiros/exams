@@ -17,35 +17,34 @@ export type PreExamFormType = z.infer<typeof preExamSchema>;
 export type ExamType = {
   id: number | undefined;
   image: string | undefined;
-  title: string
-  questions: QuestionType[]
-  slug: string
+  title: string;
+  questions: QuestionType[];
+  slug: string;
   description: string;
 }
 
 export type SessionType = {
-  preForm: PreExamFormType | undefined,
-  answers: SessionAnswerType[]
-  active: boolean
+  preForm: PreExamFormType | undefined;
+  answers: SessionAnswerType[];
+  active: boolean;
 };
 
 export type QuestionType = {
-  id: number
-  number: number
-  title: string
-  description: string
+  id: number;
+  number: number;
+  statement: string;
   alternatives: AlternativeType[]
 }
 
 export type SessionAnswerType = {
   questionId: number;
-  number: number
+  number: number;
   alternativeId: number;
 }
 
 export type AlternativeType = {
-  label: string;
   id: number;
+  label: string;
   sequence: number;
 }
 

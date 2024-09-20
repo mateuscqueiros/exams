@@ -10,13 +10,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconQuestionMark } from "@tabler/icons-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import classes from "./app-shell.module.css";
 
 export function AppShell({ children }: React.PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
   const examSession = useExamSessionStore();
   const router = useRouter();
+  const pathname = usePathname();
   const params = useParams<{ questionNumber: string }>();
 
   const currentQuestion =
@@ -25,6 +26,16 @@ export function AppShell({ children }: React.PropsWithChildren) {
           (q) => q.number === Number(params.questionNumber),
         )
       : undefined;
+
+  const isInExamSession = (): boolean => {
+    if (!examSession.session?.active) return false;
+
+    const examSlug = examSession.exam?.slug;
+
+    if (!examSlug) return true;
+    if (!pathname.includes(examSlug)) return false;
+    return true;
+  };
 
   return (
     <MantineAppShell
@@ -54,7 +65,21 @@ export function AppShell({ children }: React.PropsWithChildren) {
               >
                 Parse
               </UnstyledButton>
-              {examSession.session?.active && (
+              {examSession.exam &&
+                examSession.session?.active &&
+                !currentQuestion && (
+                  <UnstyledButton
+                    className={classes.control}
+                    onClick={() => {
+                      router.push(
+                        `/exams/${examSession.exam?.slug}/questions/1`,
+                      );
+                    }}
+                  >
+                    Return to Session
+                  </UnstyledButton>
+                )}
+              {examSession.session?.active && currentQuestion && (
                 <UnstyledButton
                   className={classes.control}
                   onClick={() => {
@@ -65,6 +90,7 @@ export function AppShell({ children }: React.PropsWithChildren) {
                   End Session
                 </UnstyledButton>
               )}
+              {/* <ToggleColorScheme /> */}
             </Group>
           </Group>
         </Group>
@@ -78,6 +104,7 @@ export function AppShell({ children }: React.PropsWithChildren) {
       </MantineAppShell.Navbar>
 
       <MantineAppShell.Main>{children}</MantineAppShell.Main>
+
       {examSession.session?.active && currentQuestion && (
         <QuestionsFooter question={currentQuestion} />
       )}

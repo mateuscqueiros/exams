@@ -21,8 +21,6 @@ export function FeaturedExam({ exam }: FeaturedExamProps) {
 
   const isMobile = useMediaQuery(`(max-width: 48em)`);
 
-  console.log(isMobile);
-
   if (isMobile) return <FeaturedExamMobile exam={exam} />;
 
   return (

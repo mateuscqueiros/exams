@@ -353,6 +353,14 @@ export const examAnswers: AnswerKeyType[] = [
   {
     questionId: 1,
     alternativeId: 3
+  },
+  {
+    questionId: 2,
+    alternativeId: 0
+  },
+  {
+    questionId: 3,
+    alternativeId: 1
   }
 ]
 

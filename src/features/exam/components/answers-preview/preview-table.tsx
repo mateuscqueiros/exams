@@ -1,4 +1,5 @@
-import { Table } from "@mantine/core";
+import { rightColor, wrongColor } from "@/utils/theme";
+import { Table, useMantineColorScheme } from "@mantine/core";
 import {
   AnswerKeyType,
   QuestionType,
@@ -19,6 +20,9 @@ export function AnswerPreviewTable({
   answerKey,
   showAnswers = true,
 }: AnswerPreviewTableProps) {
+  const scheme = useMantineColorScheme();
+  const isDark = scheme.colorScheme === "dark";
+
   const rows = userAnswers.map((userAnswer) => {
     const question = questions.find((q) => q.id === userAnswer.questionId);
     const selectedAlternative = question?.alternatives.find(
@@ -39,8 +43,8 @@ export function AnswerPreviewTable({
         bg={
           showAnswers && answerKey
             ? selectedAlternative?.id === answerToQuestion?.id
-              ? "lime.1"
-              : "red.1"
+              ? rightColor(isDark)
+              : wrongColor(isDark)
             : undefined
         }
       >
@@ -60,7 +64,7 @@ export function AnswerPreviewTable({
   });
 
   return (
-    <Table striped withColumnBorders>
+    <Table striped withColumnBorders={!showAnswers}>
       <Table.Thead>
         <Table.Tr>
           <Table.Th>Questão</Table.Th>

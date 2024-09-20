@@ -31,7 +31,11 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <MantineProvider
+          withGlobalClasses
+          defaultColorScheme="light"
+          theme={theme}
+        >
           <AppShell>{children}</AppShell>
         </MantineProvider>
         <Toaster richColors position="bottom-left" style={{ bottom: 100 }} />
