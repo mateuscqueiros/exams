@@ -1,4 +1,4 @@
-import { ExamType } from "@/features/exam";
+import { ExamType } from "@/features/exams/exam.types";
 import {
   Card,
   Image,
@@ -8,8 +8,8 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import Link from "next/link";
 import { PageSection } from "./page-section";
+import { Link } from "react-router-dom";
 
 export type FeaturedExamProps = {
   exam: ExamType;
@@ -29,7 +29,7 @@ export function FeaturedExam({ exam }: FeaturedExamProps) {
         {exam.image && (
           <Card.Section
             component={Link}
-            href={`/exams/${exam.slug}`}
+            to={`/exams/${exam.slug}`}
             p={0}
             style={{ shadow: "1px solid" }}
           >
@@ -59,7 +59,7 @@ export function FeaturedExam({ exam }: FeaturedExamProps) {
 export function FeaturedExamMobile({ exam }: FeaturedExamProps) {
   return (
     <PageSection title="Em destaque">
-      <Card component={Link} href={`/exams/${exam.slug}`} withBorder>
+      <Card component={Link} to={`/exams/${exam.slug}`} withBorder>
         {exam.image && (
           <Card.Section p={0} style={{ shadow: "1px solid" }}>
             <Image mah={300} src={exam.image} />
